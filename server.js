@@ -1,12 +1,14 @@
 var express = require('express');
 var app = express();
 
+app.use(express.static('./public'));
+
 app.use('/corsiblocktapping', require('./corsiblock'));
 
 app.use('/facenameassociation', require('./facename'));
 
 app.get('/', function(req, res) {
-    return res.send('Home');
+    return res.send('/index.html');
 });
 
 var port = Number(process.env.PORT || 8080);
