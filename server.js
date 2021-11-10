@@ -19,6 +19,36 @@ app.get('/api', (req, res) => {
   res.json({ message: "Hello from server!" });
 });
 
+
+
+
+// Showing names page recalled in last
+app.get("/names", function (req, res) {
+    res.render("names");
+});
+// handling the req 
+app.post("/names", function (req, res) {
+    const x = req.body
+    console.log("\nNames recalled :-\n")
+    console.log(x.names)
+    res.render("occupations")
+});
+
+
+// Showing occupations page reacalled in last
+app.get("/occupations", function (req, res) {
+    res.render("occupations");
+});
+// handling the req 
+app.post("/occupations", function (req, res) {
+    const x = req.body
+    console.log("\nOccupation recalled :-\n")
+    console.log(x.occupations)
+    res.render("completed")
+});
+
+
+
 var port = Number(process.env.PORT || 8080);
 app.listen(port);
 console.log("App running at port", port);
