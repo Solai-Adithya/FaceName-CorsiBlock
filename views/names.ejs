@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Check JS</title>
+        <style>
+            div.justify{
+                display: flex;
+                justify-content: center;
+                height: 380px;
+            }
+
+            div.center {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+        </style>
+    </head>
+    <body>
+    
+    <h3 align="center">Enter as many names as you can recall, each name in a new line.</h3>
+
+    <form action="/names" method="POST">
+        <label for="names"></label>
+        <div class = "justify">
+        <textarea id="names" name="names" placeholder="Write Names Here.."></textarea>
+        </div>
+        <!-- <input type="submit" value="Submit"> -->
+        <div class="center">
+        <button type="submit">SUBMIT</button></div>
+    </form>
+
+    </body>
+</html>
