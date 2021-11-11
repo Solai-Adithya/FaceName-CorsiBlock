@@ -16,9 +16,13 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 app.use('/corsiblocktapping', require('./corsiblock'));
 
-app.get('/face-name', function(req, res) {
-  // console.log("inside main server get route face-name\n")
-  res.sendFile('facename/facename.html', { root: './public/'});
+// app.get('/face-name', function(req, res) {
+//   // console.log("inside main server get route face-name\n")
+//   res.sendFile('facename/facename.html', { root: './public/'});
+// });
+app.get('/face-name', function(req, res){
+    console.log("inside main server get route face-name\n")
+    res.render("agreement")
 });
 
 app.get('/', function(req, res) {
