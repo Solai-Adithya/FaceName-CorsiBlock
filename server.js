@@ -17,17 +17,19 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 app.use('/corsiblocktapping', require('./corsiblock'));
 
-// app.get('/face-name', function(req, res) {
-//   // console.log("inside main server get route face-name\n")
-//   res.sendFile('facename/facename.html', { root: './public/'});
-// });
-app.get('/face-name', function(req, res){
-    console.log("inside main server get route face-name\n")
-    res.render("agreement")
+app.get('/face-name', function(req, res) {
+  // console.log("inside main server get route face-name\n")
+  res.sendFile('facename/facename.html', { root: './public/'});
 });
 
+
 app.get('/', function(req, res) {
-  return res.send('/index.html');
+  res.render("input_page")
+});
+app.post("/", function (req, res) {
+  const x = req.body
+  console.log(x)
+  res.render("main_page")
 });
 
 app.get('/api', (req, res) => {
