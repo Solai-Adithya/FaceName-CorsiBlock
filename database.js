@@ -8,16 +8,23 @@ class API {
     // for example participant should be an object like {age:19, handedness:'left', ...}
     const { data, error } = await supabase.from('Participants').insert(participant);
     const participantID = data[0].participantID;
+    const scoreData = await this.addEmptyScoreEntry(participantID);
     return participantID;
   }
 
+  async addEmptyScoreEntry(participantID, facelistID=1) {
+    const { data, error } = await supabase.from('Score').insert({participantID: participantID, facelistID: facelistID});
+    return data;
+  }
+
   async updateScore(participantID, param, score) {
-    //If row is not present, it will be inserted. If present, row will be updated.
-    const { data, error } = await supabase.from('Score').upsert({participantID: participantID, [param]: score});
+    const { data, error } = await supabase.from('Score').where({participantID: participantID}).update({[param]: score});
+    return data;
   }
 
   async addNewFace(imageID, name, affiliation) {
     const {data, error} = await supabase.from('Facedata').insert({imageID: imageID, name: name, affiliation: affiliation});
+    return data;
   }
 }
 
