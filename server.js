@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var API = require('./database')
 var app = express();
 var bodyParser = require("body-parser");
 
@@ -44,7 +45,7 @@ app.post("/names", function (req, res) {
 });
 
 
-// Showing occupations page reacalled in last
+// Showing occupations page recalled in last
 app.get("/occupations", function (req, res) {
     res.render("occupations");
 });
@@ -56,6 +57,17 @@ app.post("/occupations", function (req, res) {
     res.render("completed")
 });
 
+
+
+const db = new API();
+
+// WORKS AS EXPECTED
+// fntest = async () => {
+//   const participantID = await db.newParticipant({age: 25});
+//   console.log(participantID);
+// }
+
+// fntest();
 
 
 var port = Number(process.env.PORT || 8080);
