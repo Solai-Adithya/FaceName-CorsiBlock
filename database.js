@@ -5,8 +5,8 @@ const supabase = createClient(process.env.DB_URL, process.env.DB_KEY)
 
 class API {
   async newParticipant(participant) {
-    // for example participant should be an object like {age:19, handedness:'left', ...}
     const { data, error } = await supabase.from('Participants').insert(participant);
+    console.log("New Participant DB Query Data: ", data, " Error: ", error)
     const participantID = data[0].participantID;
     const scoreData = await this.addEmptyScoreEntry(participantID);
     return participantID;
