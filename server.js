@@ -95,9 +95,38 @@ app.post("/login", async function(req, res) {
     }
 })
 
-app.get("/test", function(req, res) {
-    res.render('displayFaces.ejs');
+app.get("/displayFaces", async function(req, res) {
+    const imageData = await db.fetchFaceData("imageID");
+    console.log("Final image data: ", imageData);
+    let allImages = [];
+    for (let i = 0; i < imageData.length; i++) {
+        allImages.push(imageData[i].imageID);
+    }
+    res.render('displayFaces.ejs', { images: allImages, figcaptions: [] });
 })
+
+app.get("/displayNames", async function(req, res) {
+    const imageData = await db.fetchFaceData("imageID, name");
+    console.log("Final image data: ", imageData);
+    let allImages = [], figcaptions = [];
+    for (let i = 0; i < imageData.length; i++) {
+        allImages.push(imageData[i].imageID);
+        figcaptions.push(imageData[i].name);
+    }
+    res.render('displayNames.ejs', { images: allImages, figcaptions: figcaptions });
+})
+
+app.get("/displayAffn", async function(req, res) {
+    const imageData = await db.fetchFaceData("imageID, affiliation");
+    console.log("Final image data: ", imageData);
+    let allImages = [], figcaptions = [];
+    for (let i = 0; i < imageData.length; i++) {
+        allImages.push(imageData[i].imageID);
+        figcaptions.push(imageData[i].affiliation);
+    }
+    res.render('displayAffn.ejs', { images: allImages, figcaptions: figcaptions });
+})
+
 
 var port = Number(process.env.PORT || 8080);
 app.listen(port);
