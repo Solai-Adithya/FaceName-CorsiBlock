@@ -21,7 +21,7 @@ app.use('/corsiblocktapping', require('./corsiblock'));
 
 app.get('/face-name', async function(req, res) {
     // console.log("inside main server get route face-name\n")
-    res.render('facename.ejs', { data: await db.fetchData(), txt: "helloooo" });
+    res.render('facename.ejs', { data: await db.fetchData() });
 });
 
 

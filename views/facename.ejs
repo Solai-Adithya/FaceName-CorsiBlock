@@ -16,12 +16,26 @@
             <h1 class="text-center mt-2">Facename Associative memory tasks</h1>
         </div>
         <div class="">
-            <h2 class="current-display text-center pt-2">Recall the Faces</h2>
+            <h2 class="text-center pt-2" id="current-display">Remember the Faces</h2>
         </div>
         <div class="col justify-content-around">
-            <div id="images1" class="mx-2 my-5 row justify-content-around">
+            <div id="images1" class="my-5 row justify-content-around">
+                <!-- <div class="">
+                    <img src='/facename/assets/female1.jpeg' id='im1' style=' border: solid green;' height='300' width='300' alt=' no fngfgs image '></img>
+                    <p class="text-center m-0">Name 1</p>
+                    <p class="text-center m-0">Affiliation 1</p>
+                </div>
+                <div class="">
+                    <img src='/facename/assets/female1.jpeg ' id='im1 ' style='border: solid green; ' height='300 ' width='300' alt='no fngfgs image'></img>
+                    <p class="text-center m-0">Name 2</p>
+                    <p class="text-center m-0">Affiliation 2</p>
+                </div> -->
+                <!-- <div class="col-md-3">
+                </div>
+                <div class="col-md-3">
+                </div> -->
             </div>
-            <div id="images2" class="mx-2 my-5 row justify-content-around">
+            <div id="images2" class=" my-5 row justify-content-around">
             </div>
         </div>
     </div>
@@ -30,40 +44,89 @@
         var imagesDiv1 = document.getElementById("images1");
         var imagesDiv2 = document.getElementById("images2");
 
-        function func(i1, i2, i3, i4, t) {
-            var imageElement1 = document.createElement("img");
-            var imageElement2 = document.createElement("img");
-            var imageElement3 = document.createElement("img");
-            var imageElement4 = document.createElement("img");
+        function displayImageData(i1, i2, i3, i4, name1, name2, name3, name4, aff1, aff2, aff3, aff4, t) {
+            var divElement1 = document.createElement("div");
+            divElement1.id = "im1";
+            var divElement2 = document.createElement("div");
+            divElement2.id = "im2";
+            var divElement3 = document.createElement("div");
+            divElement3.id = "im3";
+            var divElement4 = document.createElement("div");
+            divElement4.id = "im4";
 
-            imageElement1.src = "/facename/assets/" + i1;
-            imageElement1.id = "im1";
-            imageElement1.style = "padding: 3px; border: solid green; height: 350px; width: 430px; align: left;";
+            var imgElement1 = document.createElement("img");
+            var imgElement2 = document.createElement("img");
+            var imgElement3 = document.createElement("img");
+            var imgElement4 = document.createElement("img");
 
-            imageElement2.src = "/facename/assets/" + i2;
-            imageElement2.id = "im2";
-            imageElement2.style = "padding: 3px; border: solid green; height: 350px; width: 430; align: left;";
+            var nameElement1 = document.createElement("p");
+            nameElement1.classList = "text-center m-0";
+            nameElement1.innerHTML = name1;
 
-            imageElement3.src = "/facename/assets/" + i3;
-            imageElement3.id = "im3";
-            imageElement3.style = "padding: 3px; border: solid green; height: 350px; width: 430; align: left;";
+            var nameElement2 = document.createElement("p");
+            nameElement2.classList = "text-center m-0";
+            nameElement2.innerHTML = name2;
 
-            imageElement4.src = "/facename/assets/" + i4;
-            imageElement4.id = "im4";
-            imageElement4.style = "padding: 3px; border: solid green; height: 350px; width: 430; align: left;";
+            var nameElement3 = document.createElement("p");
+            nameElement3.classList = "text-center m-0";
+            nameElement3.innerHTML = name3;
+
+            var nameElement4 = document.createElement("p");
+            nameElement4.classList = "text-center m-0";
+            nameElement4.innerHTML = name4;
+
+            var affElement1 = document.createElement("p");
+            affElement1.classList = "text-center m-0";
+            affElement1.innerHTML = aff1;
+
+            var affElement2 = document.createElement("p");
+            affElement2.classList = "text-center m-0";
+            affElement2.innerHTML = aff2;
+
+            var affElement3 = document.createElement("p");
+            affElement3.classList = "text-center m-0";
+            affElement3.innerHTML = aff3;
+
+            var affElement4 = document.createElement("p");
+            affElement4.classList = "text-center m-0";
+            affElement4.innerHTML = aff4;
+
+            imgElement1.src = "/facename/assets/" + i1;
+            imgElement1.style = "padding: 3px; border: solid green; height: 300px; width: 430px;";
+
+            imgElement2.src = "/facename/assets/" + i2;
+            imgElement2.style = "padding: 3px; border: solid green; height: 300px; width: 430;";
+
+            imgElement3.src = "/facename/assets/" + i3;
+            imgElement3.style = "padding: 3px; border: solid green; height: 300px; width: 430;";
+
+            imgElement4.src = "/facename/assets/" + i4;
+            imgElement4.style = "padding: 3px; border: solid green; height: 300px; width: 430;";
 
             console.log("--", i1, i2, i3, i4, t);
             setTimeout(function() {
-                imagesDiv1.appendChild(imageElement1);
+                divElement1.appendChild(imgElement1);
+                divElement1.appendChild(nameElement1);
+                divElement1.appendChild(affElement1);
+                imagesDiv1.appendChild(divElement1);
             }, t)
             setTimeout(function() {
-                imagesDiv1.appendChild(imageElement2);
+                divElement2.appendChild(imgElement2);
+                divElement2.appendChild(nameElement2);
+                divElement2.appendChild(affElement2);
+                imagesDiv1.appendChild(divElement2);
             }, t)
             setTimeout(function() {
-                imagesDiv2.appendChild(imageElement3);
+                divElement3.appendChild(imgElement3);
+                divElement3.appendChild(nameElement3);
+                divElement3.appendChild(affElement3);
+                imagesDiv2.appendChild(divElement3);
             }, t)
             setTimeout(function() {
-                imagesDiv2.appendChild(imageElement4);
+                divElement4.appendChild(imgElement4);
+                divElement4.appendChild(nameElement4);
+                divElement4.appendChild(affElement4);
+                imagesDiv2.appendChild(divElement4);
             }, t)
 
             setTimeout(function() {
@@ -84,6 +147,8 @@
             i = 0;
         var itrLen = parseInt("<%= data.length %>");
         var img1, img2, img3, img4;
+        var pname1, pname2, pname3, pname4;
+        var affil1, affil, affil3, affil4;
 
         <% for (let k = 0; k < data.length - (data.length % 4); k = k + 4) { %>
         img1 = "<%= data[k].imageID %>";
@@ -91,9 +156,36 @@
         img3 = "<%= data[k + 2].imageID %>";
         img4 = "<%= data[k + 3].imageID %>";
         // console.log(img1, img2, img3, img4);
-        // func(img1, img2, img3, img4, t);
+        displayImageData(img1, img2, img3, img4, "", "", "", "", "", "", "", "", t);
         t += 2000;
         <% } %>
+
+        var headingDiv = document.getElementById("current-display");
+        setTimeout(function() {
+            headingDiv.innerHTML = "Remember the Faces, Names, Affiliation";
+        }, t);
+
+        <% for (let k = 0; k < data.length - (data.length % 4); k = k + 4) { %>
+        img1 = "<%= data[k].imageID %>";
+        pname1 = "<%= data[k].name %>";
+        affil1 = "<%= data[k].affiliation %>";
+        img2 = "<%= data[k + 1].imageID %>";
+        pname2 = "<%= data[k + 1].name %>";
+        affil2 = "<%= data[k + 1].affiliation %>";
+        img3 = "<%= data[k + 2].imageID %>";
+        pname3 = "<%= data[k + 2].name %>";
+        affil3 = "<%= data[k + 2].affiliation %>";
+        img4 = "<%= data[k + 3].imageID %>";
+        pname4 = "<%= data[k + 3].name %>";
+        affil4 = "<%= data[k + 3].affiliation %>";
+        // console.log(img1, img2, img3, img4);
+        displayImageData(img1, img2, img3, img4, pname1, pname2, pname3, pname4, affil1, affil2, affil3, affil4, t);
+        t += 2000;
+        <% } %>
+
+        setTimeout(function() {
+            window.location.href = "/names";
+        }, t + 2000);
     </script>
 </body>
 
