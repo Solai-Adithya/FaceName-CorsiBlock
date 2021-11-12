@@ -95,6 +95,10 @@ app.post("/login", async function(req, res) {
     }
 })
 
+app.get("/test", function(req, res) {
+    res.render('displayFaces.ejs');
+})
+
 var port = Number(process.env.PORT || 8080);
 app.listen(port);
 console.log("App running at port", port);

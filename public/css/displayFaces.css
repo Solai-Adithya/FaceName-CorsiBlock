@@ -1,0 +1,64 @@
+body {
+    background-color: green;
+    display: grid;
+    height: 100%;
+    grid-template-rows: 15% 85%;
+    grid-template-columns: 1fr;
+    /* row-gap: 3%;  */
+    justify-items: stretch;
+    align-items: stretch;
+}
+
+.Instruction {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border: 1px solid blue;
+}
+
+.GridContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid yellow;
+}
+
+.ImageGrid {
+    display: grid;
+    /* margin-top: 20px; */
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    column-gap: 15%;
+    row-gap: 7%;
+    justify-items: stretch;
+    /* align-items: center; */
+    /* margin-top: auto;
+    margin-bottom: auto; */
+    border: 1px solid violet;
+}
+
+.GridItem-left {
+    display: flex;
+    justify-content: right;
+    margin-right: 10%;
+    border: 1px solid red;
+}
+
+.GridItem-right {
+    display: flex;
+    justify-content: left;
+    margin-left: 10%;
+    border: 1px solid red;
+}
+
+.image {
+    object-fit: cover;
+    width: 100%;
+    height: 200px;
+}
+
+figcaption {
+    text-align: center;
+    font-size: 1.5em;
+    color: black;
+}
