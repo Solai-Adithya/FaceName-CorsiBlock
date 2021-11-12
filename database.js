@@ -26,6 +26,13 @@ class API {
     const {data, error} = await supabase.from('Facedata').insert({imageID: imageID, name: name, affiliation: affiliation});
     return data;
   }
+
+  async checkAdmin(username_arg, hashedpwd_arg) {
+    const {data, error} = await supabase.from('Admin').select('username').match({username: username_arg, hashedpwd: hashedpwd_arg});
+    console.log("Admin DB Query Data: ", data, " Error: ", error)
+    if(data.length>0) return true;
+    else return false;  
+  }
 }
 
 module.exports = API;
