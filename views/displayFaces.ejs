@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible">
@@ -7,6 +8,7 @@
     <title>Face-Name Memory Test</title>
     <link rel="stylesheet" type="text/css" href="css/displayFaces.css">
 </head>
+
 <body>
     <!-- <div class="header">
         <h1 class="text-center mt-2">Facename Associative memory tasks</h1>
@@ -15,7 +17,7 @@
         <h2 class="text-center pt-2" id="current-display">Remember the Faces</h2>
     </div>
     <div class="GridContainer" id="GridContainerDiv">
-        
+
     </div>
 </body>
 
@@ -23,8 +25,8 @@
     async function renderContent() {
         const AllImages = '<%= images %>'.split(',');
         console.log("All Images: ", AllImages);
-        for(let i=0;i<AllImages.length;i+=4) {
-            const imageSet = AllImages.slice(i, i+4)
+        for (let i = 0; i < AllImages.length; i += 4) {
+            const imageSet = AllImages.slice(i, i + 4)
             console.log("Image Set: ", imageSet);
             const imageGridCode = `
         <div class="ImageGrid">
@@ -56,8 +58,7 @@
             await new Promise(r => setTimeout(r, 2000));
         }
 
-        //TODO: Instead of redirecting directly to displayNames, redirect to a page that displays the instructions and then goes to names
-        window.location.href = "http://localhost:8080/displayNames"
+        window.location.href = "http://localhost:8080/instructionsNames"
     }
     renderContent()
 </script>
