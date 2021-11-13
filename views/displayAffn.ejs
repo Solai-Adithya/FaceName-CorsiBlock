@@ -65,6 +65,9 @@
             GridContainer.innerHTML = imageGridCode
             await new Promise(r => setTimeout(r, 2000));
         }
+
+        const redirectURL = "<%= redirectURL %>"
+        window.location.replace(redirectURL)
     }
     renderContent()
 </script>

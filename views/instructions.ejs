@@ -24,7 +24,8 @@
 
 <script>
     function redirect() {
-        window.location.href = "<%= redirectURL %>";
+        const redirectURL = "<%= redirectURL %>"
+        window.location.replace(redirectURL)
     }
 </script>
 

@@ -68,7 +68,8 @@
             await new Promise(r => setTimeout(r, 2000));
         }
 
-        window.location.href = "http://localhost:8080/instructionsAffn"
+        const redirectURL = "<%= redirectURL %>"
+        window.location.replace(redirectURL)
     }
     renderContent()
 </script>

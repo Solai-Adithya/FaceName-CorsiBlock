@@ -10,9 +10,6 @@
 </head>
 
 <body>
-    <!-- <div class="header">
-        <h1 class="text-center mt-2">Facename Associative memory tasks</h1>
-    </div> -->
     <div class="Instruction">
         <h2 class="text-center pt-2" id="current-display">Remember the Faces</h2>
     </div>
@@ -58,7 +55,8 @@
             await new Promise(r => setTimeout(r, 2000));
         }
 
-        window.location.href = "http://localhost:8080/instructionsNames"
+        const redirectURL = "<%= redirectURL %>"
+        window.location.replace(redirectURL)
     }
     renderContent()
 </script>

@@ -21,12 +21,11 @@
 
     <h3 align="center">Enter as many Occupations as you can recall, each in a new line.</h3>
 
-    <form action="/occupations" method="POST">
+    <form action="<%= formSubmitURL %>" method="POST">
         <label for="occupations"></label>
         <div class="justify">
-        <textarea id="occupations" name="occupations" placeholder="Write Occupations Here.." style="height:350px"></textarea>
+            <textarea id="occupations" name="occupations" placeholder="Write Occupations Here.." style="height:350px"></textarea>
         </div>
-        <!-- <input type="submit" value="Submit"> -->
         <div class="center">
         <button type="submit">SUBMIT</button></div>
     </form>

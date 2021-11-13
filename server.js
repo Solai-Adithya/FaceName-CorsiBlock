@@ -1,18 +1,16 @@
-var express = require('express')
-var path = require('path')
-var API = require('./database')
-var crypto = require('crypto')
+const express = require('express')
+const path = require('path')
+const API = require('./database')
+const crypto = require('crypto')
 const db = new API()
-var app = express()
-var bodyParser = require("body-parser")
-var participantID, facenameData;
+const app = express()
+const bodyParser = require("body-parser")
+const homeURL = "http://localhost:8080"
+var participantID;
 
 app.set("view engine", "ejs");
+app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
-app.get("/adminPanel.html", function(req, res) {
-    res.redirect("/admin")
-})
-
 app.use(require("express-session")({
     secret: "Rusty is a dog",
     resave: false,
@@ -21,13 +19,28 @@ app.use(require("express-session")({
 app.use(express.static(path.join(__dirname, '/public')));
 init();
 
+let allImages = [], names = [], affiliations = [];
+async function fetchAllData() {
+    const imageData = await db.fetchFaceData();
+    console.log("Final image data: ", imageData);
+    for (let i = 0; i < imageData.length; i++) {
+        allImages.push(imageData[i].imageID);
+        names.push(imageData[i].name);
+        affiliations.push(imageData[i].affiliation);
+    }
+}
+fetchAllData();
+
+app.get("/adminPanel.html", function(req, res) {
+    res.redirect("/admin")
+})
+
 app.use('/corsiblocktapping', require('./corsiblock'));
-// app.use('/facename', require('./facename'));
 
 app.get('/face-name', async function(req, res) {
-    res.render('instructions', { redirectURL: "http://localhost:8080/displayFaces", content: "You will be shown images of people. Observe and remember the faces. You will get time of 2 seconds per face." });
+    //TODO: after development, prevent this page being directly accessed before filling form.
+    res.render('instructions', { redirectURL: homeURL+"/displayFaces", content: "You will be shown images of people. Observe and remember the faces. You will get time of 2 seconds per face." });
 });
-
 
 app.get('/', function(req, res) {
     res.render("input_page")
@@ -40,35 +53,48 @@ app.post("/", async function(req, res) {
     res.render("main_page")
 });
 
-app.get('/api', (req, res) => {
-    res.json({ message: "Hello from server!" });
-});
 
-
-// Showing names page recalled in last
-app.get("/names", function(req, res) {
-    res.render("names");
+app.get("/namesTest1", function(req, res) {
+    res.render("names", { formSubmitURL: "/names/test1" });
 });
-// handling the req 
-app.post("/names", function(req, res) {
+app.get("/namesTest2", function(req, res) {
+    res.render("names", { formSubmitURL: "/names/test2" });
+});
+app.post("/names/test1", function(req, res) {
     const x = req.body
     console.log("\nNames recalled :-\n")
     console.log(x.names)
-    res.render("occupations")
+    res.render("occupations", { formSubmitURL: "/occupationsTestPost1"});
 });
+app.post("/names/test2", function(req, res) {
+    const x = req.body
+    console.log("\nNames recalled :-\n")
+    console.log(x.names)
+    res.render("occupations", { formSubmitURL: "/occupationsTestPost2"});
+})
 
-// Showing occupations page recalled in last
-app.get("/occupations", function(req, res) {
-    res.render("occupations");
-});
+// app.get("/occupationsTest1", function(req, res) {
+//     res.render("occupations", { formSubmitURL: "/occupations/test1"});
+// });
+// app.get("/occupationsTest2", function(req, res) {
+//     res.render("occupations", { formSubmitURL: "/occupations/test2"});
+// });
 
-// handling the req 
-app.post("/occupations", function(req, res) {
+app.post("/occupationsTestPost1", async function(req, res) {
     const x = req.body
     console.log("\nOccupation recalled :-\n")
     console.log(x.occupations)
-    res.render("completed")
+    res.render('twoInputTest.ejs', { images: allImages });
+    // res.redirect('allTest1')
 });
+app.post("/occupationsTestPost2", async function(req, res) {
+    const x = req.body
+    console.log("\nOccupation recalled :-\n")
+    console.log(x.occupations)
+    res.render('twoInputTest.ejs', { images: allImages });
+    // res.redirect('../allTest2')
+});
+
 
 app.get("/admin", function(req, res) {
     res.sendFile('adminLogin.html', { root: './public/' })
@@ -95,46 +121,60 @@ app.post("/login", async function(req, res) {
     }
 })
 
-app.get("/displayFaces", async function(req, res) {
-    const imageData = await db.fetchFaceData("imageID");
-    console.log("Final image data: ", imageData);
-    let allImages = [];
-    for (let i = 0; i < imageData.length; i++) {
-        allImages.push(imageData[i].imageID);
-    }
-    res.render('displayFaces.ejs', { images: allImages, figcaptions: [] });
+app.get("/displayFaces", function(req, res) {
+    res.render('displayFaces.ejs', { redirectURL: homeURL+"/instructionsNames", images: allImages, figcaptions: [] });
 })
 
-app.get("/displayNames", async function(req, res) {
-    const imageData = await db.fetchFaceData("imageID, name");
-    console.log("Final image data: ", imageData);
-    let allImages = [],
-        figcaptions = [];
-    for (let i = 0; i < imageData.length; i++) {
-        allImages.push(imageData[i].imageID);
-        figcaptions.push(imageData[i].name);
-    }
-    res.render('displayNames.ejs', { images: allImages, figcaptions: figcaptions });
+app.get("/displayNames", function(req, res) {
+    res.render('displayNames.ejs', { redirectURL: homeURL+"/nameTest", images: allImages, figcaptions: names });
 })
 
-app.get("/displayAffn", async function(req, res) {
-    const imageData = await db.fetchFaceData("imageID, affiliation");
-    console.log("Final image data: ", imageData);
-    let allImages = [],
-        figcaptions = [];
-    for (let i = 0; i < imageData.length; i++) {
-        allImages.push(imageData[i].imageID);
-        figcaptions.push(imageData[i].affiliation);
-    }
-    res.render('displayAffn.ejs', { images: allImages, figcaptions: figcaptions });
+app.get("/displayAffn", function(req, res) {
+    res.render('displayAffn.ejs', { redirectURL: homeURL+"/affnTest", images: allImages, figcaptions: affiliations });
 })
 
 app.get("/instructionsNames", function(req, res) {
-    res.render("instructions", { redirectURL: "http://localhost:8080/displayNames", content: "You will be shown names of people. Observe and remember the faces and their names. You will get time of 2 seconds per face." })
+    res.render("instructions", { redirectURL: homeURL+"/displayNames", content: "You will be shown names of people. Observe and remember the faces and their names. You will get time of 2 seconds per face." })
 })
 
 app.get("/instructionsAffn", function(req, res) {
-    res.render("instructions", { redirectURL: "http://localhost:8080/displayAffn", content: "You will be shown affiliations of people. Observe and remember the faces and their affiliations. You will get time of 2 seconds per face." })
+    res.render("instructions", { redirectURL: homeURL+"/displayAffn", content: "You will be shown affiliations of people. Observe and remember the faces and their affiliations. You will get time of 2 seconds per face." })
+})
+
+app.get("/nameTest", function(req, res) {
+    res.render('oneInputTest.ejs', { redirectURL: homeURL+"/displayAffn", images: allImages, functionality: "Name" });
+})
+
+app.get("/affnTest", function(req, res) {
+    res.render('oneInputTest.ejs', { images: allImages, functionality: "Occupation" });
+})
+
+app.get("/allTest1", function(req, res) {
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test1" });
+})
+app.get("/allTest2", function(req, res) {
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test2" });
+})
+
+app.post("/nameTest/userAnswers", function(req, res) {
+    console.log("User's answers: ", req.body);
+    res.send("Success")
+})
+app.post("/affnTest/userAnswers", function(req, res) {
+    console.log("User's answers: ", req.body);
+    res.send("Success")
+})
+app.post("/allTest/userAnswers/test1", function(req, res) {
+    console.log("User's answers for test1: ", req.body);
+    res.send("Success")   
+})
+app.post("/allTest/userAnswers/test2", function(req, res) {
+    console.log("User's answers for test2: ", req.body);
+    res.send("Success")   
+})
+
+app.get("/wait", function(req, res) {
+    res.render('waitScreen.ejs', { redirectURL: homeURL+"/namesTest2"})
 })
 
 var port = Number(process.env.PORT || 8080);
