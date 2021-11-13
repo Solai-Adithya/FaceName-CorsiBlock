@@ -1,0 +1,741 @@
+<!doctype html>
+
+<title>Corsi Block</title>
+<script src="d3.min.js"></script>
+<script src='block.js'></script>
+<script src='sequence.js'></script>
+<script src='game.js'></script>
+<script src='settings.js'></script>
+<script src='data.js'></script>
+
+<style type='text/css'>
+	* { padding:0; margin:0; }
+	#boardBackground { background:#000000; box-sizing:border-box; width:100%; }
+</style>
+<body>
+	<div id='boardBackground'></div>
+</body>
+<script>
+
+// The program begins with the call to setupUserIDScreen, as done in this function.
+window.onload = function() {
+	var height = getViewportHeight();
+
+  if(height > 0)
+    document.getElementById("boardBackground").style.height = height + "px";
+
+ 	// setupUserIDScreen();
+	InitiateInstScreen();
+}
+
+function getViewportHeight() {
+	var h = 0;
+
+  if(this.innerHeight)
+    h = window.innerHeight;
+  else if(document.documentElement && document.documentElement.clientHeight)
+    h = document.documentElement.clientHeight;
+  else if(document.body)
+    h = document.body.clientHeight;
+
+  return h;
+}
+
+var data = new Data();
+var game = new Game();
+var sequence;
+var board;
+var gameReady = true;
+var date = new Date();
+var time = date.getTime();
+
+var setupBoard = function() {
+	var svg = d3.select('#boardBackground').append('svg')
+		.attr('id', 'board')
+		.attr('width', boardWidth)
+		.attr('height', "80vh")
+		.style({ display:'block', margin:'auto', padding:'0' });
+
+	svg.append('rect')
+	   .style('fill', boardColor)
+	   .attr({width: '100vw', height: '100vh'});
+
+	return svg;
+}
+
+var startGame = function() {
+	var resultScreen = setupResultScreen();
+	// not really 'results' in this context
+	countdown(function() {
+		resultScreen.remove();
+		runGame();
+	});
+}
+
+var setupBlocks = function() {
+	var svg = board;
+	var blockGroup = svg.append('g')
+		.attr('id', 'blocks');
+
+	for (var id = 0; id < blocks.length; id++) {
+		blocks[id].setSVG(blockGroup.append('rect')
+							.attr('id', blocks[id].getID())
+							.style({fill: blockColor})
+							.attr('height', blockSize)
+							.attr('width', blockSize)
+							.attr({x: blocks[id].getLoc()[0]
+							      ,y: blocks[id].getLoc()[1]}))
+	}
+
+	return blockGroup;
+}
+
+var setupClearButton = function() {
+	
+	const mydiv3=document.createElement("div");
+	mydiv3.setAttribute("id","mydiv3");
+
+	let btn = document.createElement("button");
+	btn.setAttribute("class","button3");
+	btn.setAttribute("id","clearButton");
+	btn.innerHTML = "Reset";
+	btn.type = "Button";
+	btn.name = "clearbtn";
+	var styles=`.button3 {
+		background-color: white; 
+  color: black; 
+  border: 3px solid #4CAF50;
+  width: 75px;
+  padding: 10px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin-left: 275px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition-duration: 0.4s;
+}
+
+.button3:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}`
+var styleSheet = document.createElement("style")
+styleSheet.type = "text/css"
+styleSheet.innerText = styles
+document.head.appendChild(styleSheet);
+mydiv3.appendChild(btn);
+return mydiv3;
+
+}
+
+var setupNextButton = function() {
+
+	const mydiv2=document.createElement("div");
+	mydiv2.setAttribute("id","mydiv2");
+
+	let btn = document.createElement("button");
+	btn.setAttribute("class","button2");
+	btn.setAttribute("id","nextButton");
+	btn.innerHTML = "Next";
+	btn.type = "Button";
+	btn.name = "nextbtn";
+
+	var styles=`
+	.button2 {
+		background-color: white; 
+  color: black; 
+  border: 3px solid #4CAF50;
+  width: 75px;
+  padding: 10px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin-left: 150px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition-duration: 0.4s;
+}
+
+.button2:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}`
+var styleSheet = document.createElement("style")
+styleSheet.type = "text/css"
+styleSheet.innerText = styles
+document.head.appendChild(styleSheet);
+mydiv2.appendChild(btn);
+return mydiv2;
+	
+}
+
+var setupButtons = function() {
+
+	var clearbtn=setupClearButton();
+	var nextbtn=setupNextButton();
+	const element=document.getElementById('boardBackground');
+	const mydiv4=document.createElement("div");
+	mydiv4.setAttribute("id","mydiv4");
+	mydiv4.appendChild(clearbtn);
+	mydiv4.appendChild(nextbtn);
+	element.appendChild(mydiv4);
+	
+	var styles=`
+	
+	#mydiv4 {
+    margin-top: 70px;   
+    width: 1200;
+	display:none;
+}
+
+#mydiv3 {
+    float: left;
+    width: 500px;
+}
+
+#mydiv2 {
+    float: right;
+    width: 500px;
+}	
+	`
+var styleSheet = document.createElement("style")
+styleSheet.type = "text/css"
+styleSheet.innerText = styles
+document.head.appendChild(styleSheet);
+}
+
+
+var setupUserTurnNotification = function() {
+	var notificationXLoc = "30vw"
+	   ,notificationYLoc = 20;
+
+	var svg = board;
+	var notification = svg.append('text')
+		.attr('id', 'notification')
+		.style({fill: 'white', stroke: 'none', 'font-family': ' Georgia,Cambria,"Times New Roman",Times,serif', 'font-style': 'italic', 'font-size': 12})
+		.attr({x : notificationXLoc, y : notificationYLoc})
+		.text('Repeat the sequence.');
+
+	return notification;
+}
+
+var teardownUserTurnNotification = function() {
+	d3.select('#notification').remove();
+}
+
+var teardownbuttons =function(){
+	var myobj1=document.getElementById('mydiv4');
+	myobj1.remove();
+}
+var getBlockById = function(el) {
+	var searchID = el.getAttribute('id');
+	var b;
+	for (var i = 0; i < blocks.length; i++) {
+		b = blocks[i];
+		if (searchID === b.getID()) return b;
+	}
+	return null;
+}
+
+var mouseDownOnBlock = function() {
+	if (game.inUserStage()) {
+		var b = getBlockById(this);
+		if (b) {
+			b.highlight();
+			b.getSVG().style('fill', tapColor);
+			sequence.addUserInput(b.getID());
+			processInput(b.getID());
+		}
+	}
+}
+
+var mouseUp = function() {
+	if (game.inUserStage()) {
+		for (var i = 0; i < blocks.length; i++) {
+			var b = blocks[i];
+			b.unhighlight();
+			b.getSVG().style('fill', blockColor);
+		}
+	}
+}
+
+var setupBlockEvents = function() {
+	for (var i = 0; i < blocks.length; i++) {
+		var block = board.select('#' + blocks[i].getID());
+		block.on('mousedown', mouseDownOnBlock);
+	}
+	d3.select('body').on('mouseup', mouseUp);
+}
+
+async function clickClear() {
+	if (game.inUserStage()) {
+		console.log("CLICKED CLEAR");
+		sequence.clearUserInput();
+		var x=document.getElementById("mydiv6");
+		x.style.display="block";
+		setTimeout(function (){
+		x.style.display="none";
+		}, 500); 
+		processInput('clear');
+	}
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+var clickNext = function() {
+	if (game.inUserStage()) {
+		teardownUserTurnNotification();
+		var x=document.getElementById("mydiv4");
+		x.style.display="none";
+		processInput('next');
+		handleMistakes();
+		resultStage();
+	}
+}
+
+var setupClearEvent = function() {
+	var button = d3.select('#clearButton');
+	button.on('click', clickClear);
+}
+
+var setupNextEvent = function() {
+	var button = d3.select('#nextButton')
+	button.on('click', clickNext);
+}
+
+var setupButtonEvents = function() {
+	setupClearEvent();
+	setupNextEvent();
+}
+
+var updateBlocks = function() {
+	for (var i = 0; i < 9; i++) {
+		var b = blocks[i]
+		   ,bSVG = b.getSVG();
+		bSVG.style('fill', b.isHighlighted() ? tapColor : blockColor);
+	}
+}
+
+var getNextBlock = function() {
+	return blocks[sequence.nextBlock()];
+}
+
+var flashBlock = function() {
+		var b;
+		if (!sequence.isDone()) {
+			b = getNextBlock();
+			if (b) {
+				console.log('flash ' + b.getID());
+				b.highlight();
+				updateBlocks();
+			}
+			var unhighlightTimer = setTimeout(function() {
+				clearTimeout(unhighlightTimer);
+				if (b) {
+					b.unhighlight();
+					updateBlocks();
+				}
+			}, tapInterval-postTapInterval);
+		} else {
+			console.log('block sequence has been completed');
+		}
+}
+
+
+var userStage = function() {
+	game.setStage('user');
+	if (game.inUserStage()){
+		var x=document.getElementById("mydiv4");
+		x.style.display="block";	
+		setupUserTurnNotification();
+		
+	}
+
+}
+
+var setupResultScreen = function() {
+	var svg = board;
+	var resultScreen = svg.append('rect')
+		.attr('id', 'resultScreen')
+		.attr('width', boardWidth)
+		.attr('height', "100vh")
+		.style({border: '1px solid silver', fill: 'black'});
+
+	return resultScreen;
+}
+
+var teardownResultScreen = function() {
+	d3.select('#resultScreen').remove();
+}
+
+var setupGameResultText = function(scores) {
+		
+	const mydiv7=document.createElement("div");
+	mydiv7.setAttribute("id","mydiv7");
+	var numberCorrect = scores[0]
+	   ,longestSpan = scores[1];
+
+  	var numberCorrectString = 'Number correct: ' + numberCorrect
+     ,longestSpanString = 'Longest block span: ' + longestSpan;
+
+	const x = document.createElement("pre");
+	const h1 =document.createElement("h1");
+	const h1t=document.createTextNode("Results\n\n");
+	h1.appendChild(h1t);
+	h1.style.textAlign = "center";
+	h1.style.color="white";
+	h1.style.textDecorationLine="underline";
+	const t = document.createTextNode("\n\n"+numberCorrectString+"\n\n"+longestSpanString+"\n\n\n");
+  	x.appendChild(t);
+	x.style.textAlign = "center";
+	x.style.fontSize="22px";
+	const h2 = document.createElement("h2");
+	const t2 = document.createTextNode('\n\nThank You!!');
+	h2.appendChild(t2);
+	h2.style.textAlign = "center";
+	h2.style.color="white";
+	mydiv7.appendChild(h1);
+	mydiv7.appendChild(x);
+	mydiv7.appendChild(h2);
+	
+	
+	let btn = document.createElement("button");
+	btn.setAttribute("class","button3");
+	btn.setAttribute("id","exitButton");
+	btn.innerHTML = "Exit";
+	btn.type = "Button";
+	btn.name = "exitbtn";
+	btn.onclick=function(){location.href = "./index.html";};
+	
+	var styles=`#mydiv7{ 
+    font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+	color:rgb(0,255,255);
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    width:45em;
+    height:22em;
+    margin-top: -14em; 
+	padding-top: 2em;
+    margin-left: -22em; 
+	border: 2px solid #ccc;
+	border-radius: 18px;
+    
+	}
+	.button3 {
+	background-color: white; 
+	color: black; 
+	border: 3px solid #4CAF50;
+	width: 75px;
+	padding: 10px;
+	text-align: center;
+	display: inline-block;
+	font-size: 16px;
+	margin: 25px 2px 0px 325px;
+	cursor: pointer;
+	border-radius: 12px;
+	transition-duration: 0.4s;
+	}
+	.button3:hover {
+	background-color: #4CAF50; /* Green */
+	color: white;
+	}`
+	var styleSheet = document.createElement("style")
+	styleSheet.type = "text/css"
+	styleSheet.innerText = styles
+	document.head.appendChild(styleSheet);
+	mydiv7.appendChild(btn);
+	const element=document.getElementById('boardBackground');
+	element.appendChild(mydiv7);
+
+}
+
+var doneStage = function() {
+	teardownUserTurnNotification();
+	game.collectScores();
+	var score = game.reportScores();
+	setupResultScreen();
+	if (showScores) 
+	{
+		teardownbuttons();
+		setupGameResultText(score);
+	}
+}
+
+var setupSequenceResultText = function() {
+	var svg = board;
+	var resultString = sequence.isCorrect() ? 'Correct!' : 'Wrong!';
+	var resultText = svg.append('text')
+		.attr('id', 'sequenceResultText')
+		.style({fill: 'white', textAlign: "center",stroke: 'none', 'font-family': ' Georgia,Cambria,"Times New Roman",Times,serif', 'font-style': 'bold', 'font-size': 24})
+		.attr({x: "30vw", y: "50vh"})
+		.text(resultString);
+
+	return resultText;
+}
+
+var teardownSequenceResultText = function() {
+	d3.select('#sequenceResultText').remove();
+}
+
+var countdownNum;
+var setupCountdown = function() {
+	var svg = board;
+	var count = svg.append('text')
+		.attr('id', 'countdown')
+		.style({fill: 'white', stroke: 'none', 'font-family': ' Georgia,Cambria,"Times New Roman",Times,serif', 'font-style': 'bold', 'font-size': 48})
+		.attr({x: "30vw", y: "50vh"})
+		.text("" + countdownNum);
+	return count;
+}
+
+var countDown = function() {
+	d3.select('#countdown').text("" + --countdownNum);
+}
+
+var tZero = function() {
+	return countdownNum === 0;
+}
+
+// does not set up black background
+var countdown = function(callback) {
+	countdownNum = 3;
+	var counter = setupCountdown();
+	var countdownTimer = setInterval(function() {
+		countDown();
+		if (tZero()) {
+			clearInterval(countdownTimer);
+			counter.remove();
+			callback();
+		}
+	}, 1000);
+}
+
+var progressGame = function() {
+		game.increment();
+		runGame();
+}
+
+var loadRow = function(selection, t) {
+	var row = new Row();
+
+	game.collectScores();
+	var d = new Date();
+	row.date = d.toDateString();
+	row.t = d.toTimeString();
+	row.subject = game.getUserID();
+	row.seqNumber = sequence.getSequenceNumber();
+	row.seqLength = sequence.getSpan();
+	row.seqString = "" + sequence.getSequence();
+	row.resString = "" + sequence.getUserInput();
+	row.response = selection;
+	row.latency = t;
+	row.correct = sequence.isCorrect();
+	row.nCorrectTotal = game.reportScores()[0];
+	row.blockSpan = game.reportScores()[1];
+	row.totalScore = row.blockSpan * row.nCorrectTotal;
+
+	data.addDatum(row);
+}
+
+var handleMistakes = function() {
+	if (game.newSpan()) {
+		game.mistakeReset();
+	}
+
+	if (!sequence.isCorrect()) {
+		game.mistake();
+	}
+}
+
+var getNewDT = function() {
+	var d = new Date();
+	var t = d.getTime();
+	var dt = t - time;
+	time = t;
+	return dt;
+}
+
+var processInput = function(selection) {
+	var t = getNewDT();
+	sequence.checkSolution();
+	loadRow(selection, t);
+}
+
+var resultStage = function() {
+	game.setStage('result');
+
+	var resultScreen = setupResultScreen();
+	if (showFeedback) setupSequenceResultText();
+
+	var resultTimer = setTimeout(function() {
+		clearTimeout(resultTimer);
+		teardownSequenceResultText();
+
+		if (!(game.tooManyMistakes() || game.outOfSequences())) {
+			countdown(function() {
+				teardownResultScreen();
+				progressGame();
+			});
+		} else {
+			doneStage();
+			console.log('The game is done.');
+		}
+
+	}, showFeedback ? feedbackDuration : 0);
+}
+
+var runSequence = function() {
+	var testTimer = setInterval(function() {
+		flashBlock();
+		if (sequence.isDone()) {
+			clearInterval(testTimer);
+			getNewDT();
+			var waitingForLastBlockToFlash = setTimeout(function() {
+				clearTimeout(waitingForLastBlockToFlash);
+				userStage();
+			}, tapInterval);
+		}
+	}, tapInterval);
+}
+
+var setupClearNotif= function(){
+	var mydiv6 = document.createElement("div");
+		mydiv6.setAttribute("id","mydiv6");
+		const x = document.createElement("pre");
+		const t = document.createTextNode('Cleared!!');
+		x.style.textAlign = "center";
+		x.style.color="white";
+		x.appendChild(t);
+		mydiv6.appendChild(x);
+		mydiv6.style.display="none";
+		
+		const element=document.getElementById('boardBackground');
+		element.appendChild(mydiv6);
+
+}
+var setupGame = function() {
+	setupBlocks();
+	game.genSequences();
+	setupClearNotif();
+	setupButtons();
+	setupBlockEvents();
+	setupButtonEvents();
+	
+		
+}
+
+var runGame = function() {
+	game.setStage('display');
+	sequence = game.nextSequence();
+	runSequence();
+}
+
+
+var start = function(form) {
+	//teardownGameStartNotification();
+	ClearInstScreen();
+	cal_mm= 112;
+	calibrateVals();
+	board = setupBoard();
+	setupGame();
+	runGame();
+}
+
+var InitiateInstScreen = function() {
+	const mydiv=document.createElement("div");
+	mydiv.setAttribute("id","mydiv1");
+	const x = document.createElement("pre");
+	const h1 =document.createElement("h1");
+	const h1t=document.createTextNode("CORSI BLOCK TAPPING\n\n");
+	h1.appendChild(h1t);
+	h1.style.textAlign = "center";
+	h1.style.color="white";
+	const t = document.createTextNode('\n\nThe Corsi-block tapping task is a standard psychological test for evaluating an individual\'s \nvisuospatial memory abilities. In this task, the individual has to first observe\n a pattern of blinking blocks on a computer screen and then try to recall the exact order in which\n the different blocks blinked.\n\n\n');
+  	x.appendChild(t);
+	x.style.textAlign = "center";
+	x.style.fontSize="15px";
+	const x2 = document.createElement("pre");
+	const h2 = document.createElement("h1");
+	const h2t = document.createTextNode("\n\n\n\n\nINSTRUCTIONS");
+	h2.appendChild(h2t);
+	h2.style.textAlign = "center";
+	h2.style.color="white";
+	const t_l= document.createTextNode('\n\n\t\t\tYou will see a pattern of 9 blocks.\n\t\t\tThey will lit up starting from 2 blocks and highest level as 9 blocks.\n\t\t\tYou will need to click them in the same sequence.\n\t\t\tScore will be on the basis on till which level your answers are right.\n\t\t\tYou will have a reset button to clear you input.\n\t\t\tYou will have a next button to submit your input.\n\t\t\tClick START button to continue.');
+    x2.appendChild(t_l);
+    x2.style.textAlign = "left-align";
+	x2.style.fontSize="15px";
+	const element=document.getElementById('boardBackground');
+	mydiv.appendChild(h1);
+	mydiv.appendChild(x);	
+	mydiv.appendChild(h2);
+	mydiv.appendChild(x2);
+	let btn = document.createElement("button");
+	btn.setAttribute("class","button1");
+	btn.innerHTML = "Start";
+	btn.type = "Button";
+	btn.name = "intructionProceed";
+	btn.onclick=function(){start(this.form)};
+	mydiv.appendChild(btn);
+
+	var styles = `
+    #mydiv1{ 
+        font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+		color:rgb(0,255,255);
+        position:absolute;
+    	top: 50%;
+    	left: 50%;
+    	width:65em;
+    	height:29em;
+    	margin-top: -18em; 
+		padding-top: 2em;
+    	margin-left: -32em; 
+		border: 2px solid #ccc;
+		border-radius: 18px;
+    	
+    }
+	.button1 {
+		background-color: white; 
+  color: black; 
+  border: 3px solid #4CAF50;
+  width: 75px;
+  padding: 10px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin: 15px 2px 0px 500px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition-duration: 0.4s;
+}
+
+.button1:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+    
+`
+
+var styleSheet = document.createElement("style")
+styleSheet.type = "text/css"
+styleSheet.innerText = styles
+document.head.appendChild(styleSheet);
+
+	
+	element.appendChild(mydiv);
+	
+}
+
+var ClearInstScreen = function() 
+{
+	var myobj=document.getElementById('mydiv1');
+	myobj.remove();
+}
+
+</script>
+
+</html>
