@@ -14,7 +14,7 @@
         <h1 class="text-center mt-2">Facename Associative memory tasks</h1>
     </div> -->
     <div class="Instruction">
-        <h2 class="text-center pt-2" id="current-display">Remember the Faces</h2>
+        <h2 class="text-center pt-2" id="current-display">Remember the Faces and the names</h2>
     </div>
     <div class="GridContainer" id="GridContainerDiv">
 
@@ -23,31 +23,41 @@
 
 <script>
     async function renderContent() {
-        const AllImages = '<%= images %>'.split(',');
+        const AllImages = '<%= images %>'.split(','),
+            figcaptions = '<%= figcaptions %>'.split(',');
         console.log("All Images: ", AllImages);
         for (let i = 0; i < AllImages.length; i += 4) {
             const imageSet = AllImages.slice(i, i + 4)
             console.log("Image Set: ", imageSet);
+            let figcaptionSet = figcaptions.slice(i, i + 4)
+            if (figcaptionSet.length != 4) {
+                figcaptionSet = ["", "", "", ""]
+            }
+            console.log("Figcaption Set: ", figcaptionSet);
             const imageGridCode = `
         <div class="ImageGrid">
             <div class="GridItem-left">
                 <figure>
                     <img class="image" src="facename/assets/${imageSet[0]}">
+                    <figcaption>${figcaptionSet[0]}</figcaption>
                 </figure>
             </div>  
             <div class="GridItem-right">
                 <figure>
                     <img class="image" src="facename/assets/${imageSet[1]}">
+                    <figcaption>${figcaptionSet[1]}</figcaption>
                 </figure>
             </div>
             <div class="GridItem-left">
                 <figure>
                     <img class="image" src="facename/assets/${imageSet[2]}">
+                    <figcaption>${figcaptionSet[2]}</figcaption>
                 </figure>
             </div>  
             <div class="GridItem-right">
                 <figure>
                     <img class="image" src="facename/assets/${imageSet[3]}">
+                    <figcaption>${figcaptionSet[3]}</figcaption>
                 </figure>
             </div>
         </div>
@@ -58,9 +68,10 @@
             await new Promise(r => setTimeout(r, 2000));
         }
 
-        window.location.href = "http://localhost:8080/instructionsNames"
+        window.location.href = "http://localhost:8080/instructionsAffn"
     }
     renderContent()
 </script>
+
 
 </html>

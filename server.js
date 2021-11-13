@@ -25,8 +25,7 @@ app.use('/corsiblocktapping', require('./corsiblock'));
 // app.use('/facename', require('./facename'));
 
 app.get('/face-name', async function(req, res) {
-    // console.log("inside main server get route face-name\n")
-    res.render('facename.ejs', { data: await db.fetchData() });
+    res.render('instructions', { redirectURL: "http://localhost:8080/displayFaces", content: "You will be shown images of people. Observe and remember the faces. You will get time of 2 seconds per face." });
 });
 
 
@@ -81,6 +80,7 @@ app.post("/", async function(req, res) {
     console.log("Participant ID is: ", participantID);
     res.render("main_page")
 });
+
 app.post("/login", async function(req, res) {
     const formdata = req.body
     const username = formdata.username,
@@ -95,8 +95,46 @@ app.post("/login", async function(req, res) {
     }
 })
 
-app.get("/test", function(req, res) {
-    res.render('displayFaces.ejs');
+app.get("/displayFaces", async function(req, res) {
+    const imageData = await db.fetchFaceData("imageID");
+    console.log("Final image data: ", imageData);
+    let allImages = [];
+    for (let i = 0; i < imageData.length; i++) {
+        allImages.push(imageData[i].imageID);
+    }
+    res.render('displayFaces.ejs', { images: allImages, figcaptions: [] });
+})
+
+app.get("/displayNames", async function(req, res) {
+    const imageData = await db.fetchFaceData("imageID, name");
+    console.log("Final image data: ", imageData);
+    let allImages = [],
+        figcaptions = [];
+    for (let i = 0; i < imageData.length; i++) {
+        allImages.push(imageData[i].imageID);
+        figcaptions.push(imageData[i].name);
+    }
+    res.render('displayNames.ejs', { images: allImages, figcaptions: figcaptions });
+})
+
+app.get("/displayAffn", async function(req, res) {
+    const imageData = await db.fetchFaceData("imageID, affiliation");
+    console.log("Final image data: ", imageData);
+    let allImages = [],
+        figcaptions = [];
+    for (let i = 0; i < imageData.length; i++) {
+        allImages.push(imageData[i].imageID);
+        figcaptions.push(imageData[i].affiliation);
+    }
+    res.render('displayAffn.ejs', { images: allImages, figcaptions: figcaptions });
+})
+
+app.get("/instructionsNames", function(req, res) {
+    res.render("instructions", { redirectURL: "http://localhost:8080/displayNames", content: "You will be shown names of people. Observe and remember the faces and their names. You will get time of 2 seconds per face." })
+})
+
+app.get("/instructionsAffn", function(req, res) {
+    res.render("instructions", { redirectURL: "http://localhost:8080/displayAffn", content: "You will be shown affiliations of people. Observe and remember the faces and their affiliations. You will get time of 2 seconds per face." })
 })
 
 var port = Number(process.env.PORT || 8080);
