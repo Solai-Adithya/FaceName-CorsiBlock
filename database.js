@@ -13,7 +13,6 @@ class API {
     }
 
     async addEmptyScoreEntry(participantID, facelistID = 1) {
-        //Add admin feature to change facelistID being served.
         const { data, error } = await supabase.from('Score').insert({ participantID: participantID, facelistID: facelistID });
         return data;
     }
@@ -23,21 +22,6 @@ class API {
             [param]: score
         });
         return data;
-    }
-
-    async fetchImageSequence(facelistID) {
-        const { data, error } = await supabase.from('Facelist').select('image_sequence').match({ facelistID: facelistID }); 
-        console.log("Image Sequence: ", data[0].image_sequence)
-        return data[0].image_sequence;
-    }
-
-    async fetchFaceData(selectionString = "imageID, name, affiliation", facelistID = 1) {
-        const imageSequenceString = await this.fetchImageSequence(facelistID);
-        const imageSequence = imageSequenceString.split(',');
-        console.log("Image sequence retrieved is: ", imageSequence)
-        const { data, error } = await supabase.from('Facedata').select().in('imageID', imageSequence);
-        console.log("Facedata: ", data);
-        return data; 
     }
 
     async fetchData() {

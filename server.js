@@ -131,11 +131,42 @@ app.get("/displayAffn", async function(req, res) {
 
 app.get("/instructionsNames", function(req, res) {
     res.render("instructions", { redirectURL: "http://localhost:8080/displayNames", content: "You will be shown names of people. Observe and remember the faces and their names. You will get time of 2 seconds per face." })
-})
+});
 
 app.get("/instructionsAffn", function(req, res) {
     res.render("instructions", { redirectURL: "http://localhost:8080/displayAffn", content: "You will be shown affiliations of people. Observe and remember the faces and their affiliations. You will get time of 2 seconds per face." })
+});
+
+
+// adding image page from admin side 
+app.get('/add_image', function (req, res) {
+    res.render("add_image");
+});
+
+
+var multer = require('multer');
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/facename/assets')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
 })
+var upload = multer({ storage: storage })
+
+app.use('/public/facename/assets', express.static('public'));
+app.post('/add_img', upload.single('profile-file'), async function (req, res, next) {
+    const obj = JSON.parse(JSON.stringify(req.body));
+    console.log(obj);
+    // const imgdata = obj;
+    // imgID = await db.addNewFace(img_data);
+    // console.log("Image data is: ", imgID);
+    res.render("completed");
+});
+
+
+
 
 var port = Number(process.env.PORT || 8080);
 app.listen(port);

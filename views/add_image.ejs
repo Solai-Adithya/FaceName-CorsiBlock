@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <title>Upload img</title>
+    <style>
+        body,
+        html {
+            height: 100%;
+            min-height: 100%;
+            background-position: center;
+            background-size: cover;
+            background-color: #251b36;
+        }
+
+        div.center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div.text {
+            margin: auto;
+            width: 60%;
+            padding: 10px;
+            color: white;
+            font-family: "w3-cursive";
+            text-align: left;
+            font-size: 26px;
+        }
+    </style>
+
+<body>
+    <div class="text">
+        <h1 align="center">Image adding page</h2>
+            <form action="/add_img" method="POST" enctype="multipart/form-data">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Name" required autofocus><br><br>
+
+                <label for="affiliation">Affiliation</label>
+                <input type="text" name="affiliation" id="affiliation" placeholder="Pilot" required autofocus>
+                <br><br>
+                <label for="gender">Gender</label>
+                <input type="text" name="gender" id="gender" placeholder="Female" required autofocus>
+                <br>
+                <p>Upload your Image</p>
+                <input type="file" name="profile-file" id="Image" required>
+                <button type="submit">SUBMIT</button>
+    </div>
+    </form>
+</body>
+</head>
+
+</html>
