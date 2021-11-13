@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/twoInputTest.css">
+    <title>Name Test</title>
+</head>
+<body>
+    <h3 class="Instruction">Enter the Names and occupation of the below person. Then click the 'Submit' button</h3>
+    <div class="ImageContainer">
+        <figure>
+            <img class="Image" id="image">
+        </figure>
+    </div>
+    <br>
+    <div class="InputContainer">
+        <input type="text" id="name" name="name" autocomplete="off" placeholder="Enter Name">
+    </div>
+    <div class="InputContainer">
+        <input type="text" id="affn" name="affn" autocomplete="off" placeholder="Enter Occupation">
+    </div>
+    <div class="ButtonContainer">
+        <input type="button" id="submit" value="Submit">
+    </div>
+</body>
+<script>
+    let userAnswers = [], i = 0, postURL="/allTest/userAnswers", redirectURL="/wait";
+    const AllImages = '<%= images %>'.split(',');
+    console.log("AllImages: ", AllImages)
+
+    document.getElementById("image").src = "facename/assets/" + AllImages[i];
+    document.getElementById("submit").addEventListener("click", async function(){
+        const name = document.getElementById("name").value;
+        const occupation = document.getElementById("affn").value;
+        let answer = [name, occupation];
+        userAnswers.push(answer);
+        if(i < AllImages.length - 1) {
+            i++;
+            document.getElementById("name").value = "";
+            document.getElementById("affn").value = "";
+            document.getElementById("image").src = "facename/assets/" + AllImages[i];
+        } else {
+            console.log(userAnswers);
+            await fetch(postURL, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({userAnswers: userAnswers})
+            })
+            window.location.replace(redirectURL);
+        }
+    });
+</script>
+</html>

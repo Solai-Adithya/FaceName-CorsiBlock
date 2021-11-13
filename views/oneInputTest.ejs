@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/oneInputTest.css">
+    <title>Name Test</title>
+</head>
+<body>
+    <h3 class="Instruction">Enter the <%= functionality %> of the below person. Then click the 'Submit' button</h3>
+    <div class="ImageContainer">
+        <figure>
+            <img class="Image" id="image">
+        </figure>
+    </div>
+    <br>
+    <div class="InputContainer">
+        <input type="text" id="name" name="name" autocomplete="off" placeholder="Enter <%= functionality %>">
+    </div>
+    <div class="ButtonContainer">
+        <input type="button" id="submit" value="Submit">
+    </div>
+</body>
+<script>
+    let userAnswers = [], i = 0, postURL, redirectURL;
+    const AllImages = '<%= images %>'.split(','), functionality = '<%= functionality %>';
+    if(functionality == "Name") {
+        postURL = "/nameTest/userAnswers"
+        redirectURL = "/instructionsAffn";
+    } else if (functionality == "Occupation"){
+        postURL = "/affnTest/userAnswers"
+        redirectURL = "/namesTest1"
+    } else {
+        body.innerHTML = "Something went wrong"
+    }
+
+    document.getElementById("image").src = "facename/assets/" + AllImages[i];
+    document.getElementById("submit").addEventListener("click", async function(){
+        const name = document.getElementById("name").value;
+        userAnswers.push(name);
+        if(i < AllImages.length - 1){
+            i++;
+            document.getElementById("name").value = "";
+            document.getElementById("image").src = "facename/assets/" + AllImages[i];
+        } else {
+            console.log(userAnswers);
+            await fetch(postURL, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({userAnswers: userAnswers})
+            })
+            window.location.replace(redirectURL);
+        }
+    });
+</script>
+</html>

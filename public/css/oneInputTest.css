@@ -1,0 +1,21 @@
+body {
+    /* background-color: green; */
+}
+
+
+.Instruction, .ImageContainer, .InputContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.ButtonContainer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.Image {
+    object-fit: contain;
+    width: 100%;
+    max-height: 200px;
+}
