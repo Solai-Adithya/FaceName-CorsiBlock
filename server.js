@@ -131,6 +131,7 @@ app.get("/affnTest", function(req, res) {
     res.render('oneInputTest.ejs', { images: allImages, functionality: "Occupation" });
 })
 
+//TODO: The follow two lines can be deleted?
 app.get("/allTest1", function(req, res) {
     res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test1", formSubmitURL: "/allTest/userAnswers/test1" });
 })
@@ -177,16 +178,16 @@ app.post("/names/test2", function(req, res) {
 })
 
 app.post("/occupationsTestPost1", async function(req, res) {
-    let userAnswers = convertStringToArray(req.body.names);
+    let userAnswers = convertStringToArray(req.body.occupations);
     const score = scoreRecall(affiliations, userAnswers)
-    db.updateScore(req.session.participantID, 'recallAffn_1' ,score);
-    res.render('twoInputTest.ejs', { images: allImages });
+    db.updateScore(req.session.participantID, 'recallAffn_1', score);
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test1", formSubmitURL: "/allTest/userAnswers/test1" });
 });
 app.post("/occupationsTestPost2", async function(req, res) {
-    let userAnswers = convertStringToArray(req.body.names);
+    let userAnswers = convertStringToArray(req.body.occupations)
     const score = scoreRecall(affiliations, userAnswers)
-    db.updateScore(req.session.participantID, 'recallAffn_2' ,score);
-    res.render('twoInputTest.ejs', { images: allImages });
+    db.updateScore(req.session.participantID, 'recallAffn_2', score)
+    res.send("Test done, thank you.")
 });
 
 app.post("/login", async function(req, res) {
