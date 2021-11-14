@@ -18,7 +18,9 @@ app.use(require("express-session")({
 }));
 app.use(express.static(path.join(__dirname, '/public')));
 
-let allImages = [], names = [], affiliations = [];
+let allImages = [],
+    names = [],
+    affiliations = [];
 async function fetchAllData() {
     const imageData = await db.fetchFaceData();
     console.log("Final image data: ", imageData);
@@ -34,11 +36,11 @@ app.get("/adminPanel.html", function(req, res) {
     res.redirect("/admin")
 })
 
-app.use('/corsiblocktapping', require('./corsiblock'));
+app.use('/corsiblocktapping', require('./corsi/server'));
 
 app.get('/face-name', async function(req, res) {
     //TODO: after development, prevent this page being directly accessed before filling form.
-    res.render('instructions', { redirectURL: homeURL+"/displayFaces", content: "You will be shown images of people. Observe and remember the faces. You will get time of 2 seconds per face." });
+    res.render('instructions', { redirectURL: homeURL + "/displayFaces", content: "You will be shown images of people. Observe and remember the faces. You will get time of 2 seconds per face." });
 });
 
 app.get('/', function(req, res) {
@@ -63,13 +65,13 @@ app.post("/names/test1", function(req, res) {
     const x = req.body
     console.log("\nNames recalled :-\n")
     console.log(x.names)
-    res.render("occupations", { formSubmitURL: "/occupationsTestPost1"});
+    res.render("occupations", { formSubmitURL: "/occupationsTestPost1" });
 });
 app.post("/names/test2", function(req, res) {
     const x = req.body
     console.log("\nNames recalled :-\n")
     console.log(x.names)
-    res.render("occupations", { formSubmitURL: "/occupationsTestPost2"});
+    res.render("occupations", { formSubmitURL: "/occupationsTestPost2" });
 })
 
 // app.get("/occupationsTest1", function(req, res) {
@@ -121,27 +123,27 @@ app.post("/login", async function(req, res) {
 })
 
 app.get("/displayFaces", function(req, res) {
-    res.render('displayFaces.ejs', { redirectURL: homeURL+"/instructionsNames", images: allImages, figcaptions: [] });
+    res.render('displayFaces.ejs', { redirectURL: homeURL + "/instructionsNames", images: allImages, figcaptions: [] });
 })
 
 app.get("/displayNames", function(req, res) {
-    res.render('displayNames.ejs', { redirectURL: homeURL+"/nameTest", images: allImages, figcaptions: names });
+    res.render('displayNames.ejs', { redirectURL: homeURL + "/nameTest", images: allImages, figcaptions: names });
 })
 
 app.get("/displayAffn", function(req, res) {
-    res.render('displayAffn.ejs', { redirectURL: homeURL+"/affnTest", images: allImages, figcaptions: affiliations });
+    res.render('displayAffn.ejs', { redirectURL: homeURL + "/affnTest", images: allImages, figcaptions: affiliations });
 })
 
 app.get("/instructionsNames", function(req, res) {
-    res.render("instructions", { redirectURL: homeURL+"/displayNames", content: "You will be shown names of people. Observe and remember the faces and their names. You will get time of 2 seconds per face." })
+    res.render("instructions", { redirectURL: homeURL + "/displayNames", content: "You will be shown names of people. Observe and remember the faces and their names. You will get time of 2 seconds per face." })
 })
 
 app.get("/instructionsAffn", function(req, res) {
-    res.render("instructions", { redirectURL: homeURL+"/displayAffn", content: "You will be shown affiliations of people. Observe and remember the faces and their affiliations. You will get time of 2 seconds per face." })
+    res.render("instructions", { redirectURL: homeURL + "/displayAffn", content: "You will be shown affiliations of people. Observe and remember the faces and their affiliations. You will get time of 2 seconds per face." })
 })
 
 app.get("/nameTest", function(req, res) {
-    res.render('oneInputTest.ejs', { redirectURL: homeURL+"/displayAffn", images: allImages, functionality: "Name" });
+    res.render('oneInputTest.ejs', { redirectURL: homeURL + "/displayAffn", images: allImages, functionality: "Name" });
 })
 
 app.get("/affnTest", function(req, res) {
@@ -165,15 +167,15 @@ app.post("/affnTest/userAnswers", function(req, res) {
 })
 app.post("/allTest/userAnswers/test1", function(req, res) {
     console.log("User's answers for test1: ", req.body);
-    res.send("Success")   
+    res.send("Success")
 })
 app.post("/allTest/userAnswers/test2", function(req, res) {
     console.log("User's answers for test2: ", req.body);
-    res.send("Success")   
+    res.send("Success")
 })
 
 app.get("/wait", function(req, res) {
-    res.render('waitScreen.ejs', { redirectURL: homeURL+"/namesTest2"})
+    res.render('waitScreen.ejs', { redirectURL: homeURL + "/namesTest2" })
     res.render("instructions", { redirectURL: "http://localhost:8080/displayNames", content: "You will be shown names of people. Observe and remember the faces and their names. You will get time of 2 seconds per face." })
 });
 
@@ -183,24 +185,24 @@ app.get("/instructionsAffn", function(req, res) {
 
 
 // adding image page from admin side 
-app.get('/add_image', function (req, res) {
+app.get('/add_image', function(req, res) {
     res.render("add_image");
 });
 
 
 var multer = require('multer');
 var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+    destination: function(req, file, cb) {
         cb(null, './public/facename/assets')
     },
-    filename: function (req, file, cb) {
+    filename: function(req, file, cb) {
         cb(null, file.originalname)
     }
 })
 var upload = multer({ storage: storage })
 
 app.use('/public/facename/assets', express.static('public'));
-app.post('/add_img', upload.single('profile-file'), async function (req, res, next) {
+app.post('/add_img', upload.single('profile-file'), async function(req, res, next) {
     const obj = JSON.parse(JSON.stringify(req.body));
     console.log(obj);
     // const imgdata = obj;
