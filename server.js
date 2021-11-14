@@ -72,6 +72,13 @@ function scoreRecall(correctAnswers, userAnswers) {
     return correct;
 }
 
+function convertStringToArray(text) {
+    let userAnswers = text.replace(/(\r\n|\n|\r)/gm, ",");
+    userAnswers = userAnswers.split(",");
+    console.log("User Answers: ", userAnswers)
+    return userAnswers;
+}
+
 //GET REQUESTS
 app.get("/adminPanel.html", function(req, res) {
     res.redirect("/admin")
@@ -125,10 +132,10 @@ app.get("/affnTest", function(req, res) {
 })
 
 app.get("/allTest1", function(req, res) {
-    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test1" });
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test1", formSubmitURL: "/allTest/userAnswers/test1" });
 })
 app.get("/allTest2", function(req, res) {
-    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test2" });
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test2", formSubmitURL: "/allTest/userAnswers/test2" });
 })
 
 app.get("/admin", function(req, res) {
@@ -157,46 +164,26 @@ app.post("/", async function(req, res) {
     res.render("main_page")
 });
 app.post("/names/test1", function(req, res) {
-    const postRequest = req.body
-    console.log("\nNames recalled :-\n")
-    console.log(postRequest.names)
-    let userAnswers = postRequest.names.replace(/(\r\n|\n|\r)/gm, ",");
-    userAnswers = userAnswers.split(",");
-    console.log("User Answers: ", userAnswers)
+    let userAnswers = convertStringToArray(req.body.names);
     const score = scoreRecall(names, userAnswers)
     db.updateScore(req.session.participantID, 'recallNames_1' ,score);
     res.render("occupations", { formSubmitURL: "/occupationsTestPost1"});
 });
 app.post("/names/test2", function(req, res) {
-    const postRequest = req.body
-    console.log("\nNames recalled :-\n")
-    console.log(postRequest.names)
-    let userAnswers = postRequest.names.replace(/(\r\n|\n|\r)/gm, ",");
-    userAnswers = userAnswers.split(",");
-    console.log("User Answers: ", userAnswers)
+    let userAnswers = convertStringToArray(req.body.names);
     const score = scoreRecall(names, userAnswers)
     db.updateScore(req.session.participantID, 'recallNames_2' ,score);
     res.render("occupations", { formSubmitURL: "/occupationsTestPost2"});
 })
 
 app.post("/occupationsTestPost1", async function(req, res) {
-    const postRequest = req.body
-    console.log("\nOccupation recalled :-\n")
-    console.log(postRequest.occupations)
-    let userAnswers = postRequest.occupations.replace(/(\r\n|\n|\r)/gm, ",");
-    userAnswers = userAnswers.split(",");
-    console.log("User Answers: ", userAnswers)
+    let userAnswers = convertStringToArray(req.body.names);
     const score = scoreRecall(affiliations, userAnswers)
     db.updateScore(req.session.participantID, 'recallAffn_1' ,score);
     res.render('twoInputTest.ejs', { images: allImages });
 });
 app.post("/occupationsTestPost2", async function(req, res) {
-    const postRequest = req.body
-    console.log("\nOccupation recalled :-\n")
-    console.log(postRequest.occupations)
-    let userAnswers = postRequest.occupations.replace(/(\r\n|\n|\r)/gm, ",");
-    userAnswers = userAnswers.split(",");
-    console.log("User Answers: ", userAnswers)
+    let userAnswers = convertStringToArray(req.body.names);
     const score = scoreRecall(affiliations, userAnswers)
     db.updateScore(req.session.participantID, 'recallAffn_2' ,score);
     res.render('twoInputTest.ejs', { images: allImages });
@@ -230,14 +217,14 @@ app.post("/affnTest/userAnswers", function(req, res) {
 })
 app.post("/allTest/userAnswers/test1", function(req, res) {
     console.log("User's answers for test1: ", req.body);
-    const userAnswerNames = req.body.userAnswers[0]. userAnswerAffn = req.body.userAnswers[1];
+    const userAnswerNames = req.body.userAnswers[0], userAnswerAffn = req.body.userAnswers[1];
     const score = scoreBoth(userAnswerNames, userAnswerAffn);
     db.updateScore(req.session.participantID, 'cuedRecallAll_1' ,score);
     res.send("Success")   
 })
 app.post("/allTest/userAnswers/test2", function(req, res) {
     console.log("User's answers for test2: ", req.body);
-    const userAnswerNames = req.body.userAnswers[0]. userAnswerAffn = req.body.userAnswers[1];
+    const userAnswerNames = req.body.userAnswers[0], userAnswerAffn = req.body.userAnswers[1];
     const score = scoreBoth(userAnswerNames, userAnswerAffn);
     db.updateScore(req.session.participantID, 'cuedRecallAll_2' ,score);
     res.send("Success")   
@@ -248,8 +235,10 @@ app.use('/public/facename/assets', express.static('public'));
 app.post('/add_img', upload.single('profile-file'), async function(req, res, next) {
     const obj = JSON.parse(JSON.stringify(req.body));
     console.log(obj);
-    // const imgdata = obj;
-    // imgID = await db.addNewFace(img_data);
+    var num = await db.fetch_lastimg((obj.gender).toLowerCase());
+    var img_num = (obj.gender.toLowerCase()) + num + ".jpeg";
+    var num2 = await db.update_lastimg((obj.gender).toLowerCase(), num+1);
+    imgID = await db.addNewFace(img_num, obj.name, obj.affiliation);
     // console.log("Image data is: ", imgID);
     res.render("completed");
 });

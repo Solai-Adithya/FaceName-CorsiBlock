@@ -26,7 +26,7 @@
     </div>
 </body>
 <script>
-    let userAnswers = [], names = [], occupations = [], i = 0, postURL="/allTest/userAnswers", redirectURL="/wait";
+    let userAnswers = [], names = [], occupations = [], i = 0, postURL="<%= formSubmitURL %>", redirectURL="/wait";
     const AllImages = '<%= images %>'.split(',');
     console.log("AllImages: ", AllImages)
 
