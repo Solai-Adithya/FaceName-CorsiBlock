@@ -194,14 +194,13 @@ app.get('/add_image', function(req, res) {
     res.render("add_image");
 });
 
-
 var multer = require('multer');
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, './public/facename/assets')
     },
-    filename: function(req, file, cb) {
-        cb(null, file.originalname)
+    filename: async function (req, file, cb) {
+        cb(null, (req.body.gender.toLowerCase()) + (await db.fetch_lastimg((req.body.gender).toLowerCase())) + ".jpeg")
     }
 })
 var upload = multer({ storage: storage })
@@ -210,8 +209,10 @@ app.use('/public/facename/assets', express.static('public'));
 app.post('/add_img', upload.single('profile-file'), async function(req, res, next) {
     const obj = JSON.parse(JSON.stringify(req.body));
     console.log(obj);
-    // const imgdata = obj;
-    // imgID = await db.addNewFace(img_data);
+    var num = await db.fetch_lastimg((obj.gender).toLowerCase());
+    var img_num = (obj.gender.toLowerCase()) + num + ".jpeg";
+    var num2 = await db.update_lastimg((obj.gender).toLowerCase(), num+1);
+    imgID = await db.addNewFace(img_num, obj.name, obj.affiliation);
     // console.log("Image data is: ", imgID);
     res.render("completed");
 });
