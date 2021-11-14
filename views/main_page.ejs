@@ -1,60 +1,57 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
-</head>
+    <style>
+        body{background: #000000;
+        box-sizing: border-box;
+        width: 100%;}
+        #mydiv12{font-family: 'Georgia,Cambria,"Times New Roman",Times,serif';
+		color:rgb(0,255,255);
+        position:absolute;
+    	top: 50%;
+    	left: 50%;
+    	width:60em;
+    	height:25em;
+    	margin-top: -14em; 
+		padding-top: 2em;
+    	margin-left: -30em; 
+		border: 2px solid #ccc;
+		border-radius: 18px;}
 
+        .button3 {
+		background-color: white; 
+		color: black; 
+		border: 3px solid #4CAF50;
+		width: 250px;
+        height: 150px;
+		padding: 10px;
+		text-align: center;
+		display: inline-block;
+		font-size: 25px;
+        font-family: 'Georgia,Cambria,"Times New Roman",Times,serif';
+        margin-top: 70px;
+		margin-left: 152px;
+		cursor: pointer;
+		border-radius: 12px;
+		transition-duration: 0.4s;
+		}
+
+		.button3:hover {
+		background-color: #4CAF50; /* Green */
+		color: white;
+        }
+        </style>
+</head>
 <body>
-    <div class="container">
-        <h1 class="text-center py-5">Memory Assessment Tasks</h1>
-        <div class="">
-            <div class="row justify-content-around m-2">
-                <div class="border border-primary p-3 m-2 col-lg-3 col-md-5 col-sm-3">
-                    <a href="/corsiblocktapping" style="display: block;">
-                        <div class="col justify-content-md-around">
-                            <div class="text-center">
-                                <h3>Corsi Block Tapping Task</h3>
-                            </div>
-                            <br>
-                            <div class="text-center">
-                                <i class="far fa-hand-pointer"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="border border-primary p-3 m-2 col-lg-3 col-md-5 col-sm-3">
-                    <a href="/face-name" style="display: block;">
-                        <div class="col">
-                            <div class="text-center">
-                                <h3>Face Memory Association Task</h3>
-                            </div>
-                            <br>
-                            <div class="text-center">
-                                <i class="far fa-hand-pointer"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
+    <div id="mydiv12">
+        <h1 style="text-align:center">Memory Assessment Tasks</h1>
+        <button class="button3" onclick="window.location.href='/corsiblocktapping'">Corsi Block Tapping Task</button>
+        <button class="button3" onclick="window.location.href='/face-name'">Face Memory Association Task</button>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
 </body>
-
 </html>

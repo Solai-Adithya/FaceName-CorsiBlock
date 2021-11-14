@@ -1,24 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Face-Name Memory Test</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Home</title>
+    <style>
+        body{background: #000000;
+        box-sizing: border-box;
+        width: 100%;}
+        #mydiv12{font-family: 'Georgia,Cambria,"Times New Roman",Times,serif';
+		color:rgb(0,255,255);
+        position:absolute;
+    	top: 50%;
+    	left: 50%;
+    	width:60em;
+    	height:18em;
+    	margin-top: -14em; 
+		padding-top: 2em;
+    	margin-left: -30em; 
+		border: 2px solid #ccc;
+		border-radius: 18px;}
+
+        .button3 {
+        background-color: white; 
+        color: black; 
+        border: 3px solid #4CAF50;
+        width: 75px;
+        padding: 10px;
+        text-align: center;
+        display: inline-block;
+        font-size: 16px;
+        margin: 15px 2px 0px 440px;
+        cursor: pointer;
+        border-radius: 12px;
+        transition-duration: 0.4s;
+		}
+
+
+		.button3:hover {
+		background-color: #4CAF50; /* Green */
+		color: white;
+        }
+        p{
+            text-align: center;
+            color: white;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 16px;
+            margin-top: 40px;
+        }
+        h1{
+            text-align: center;
+            color:rgb(0,255,255);
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin-top: 20px;
+
+        }
+        </style>
 </head>
 <body>
-    <div class="p-5 m-2">
-        <h2 class="text-center" id="current-display">Face Memory Association Task</h2>
+    <div id="mydiv12">
+        <h1>Face Memory Association Task</h2>
+        <p > <%= content %> </p>
+        <p >Press OK to continue</p>
+        <button class="button3" onclick="redirect()">OK</button>
     </div>
-    <div class="col-sm-9 col-lg-5 text-center m-auto p-4">
-        <h5>
-            <%= content %>
-        </h5>
-        <h5 class="mt-4">Press OK to continue</h5>
-        <button type="button" onclick="redirect()" class="btn btn-info mt-4">OK</button>
-    </div>
+
 </body>
 
 <script>
@@ -27,6 +74,5 @@
         window.location.replace(redirectURL)
     }
 </script>
-
 
 </html>
