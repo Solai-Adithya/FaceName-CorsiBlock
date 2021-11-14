@@ -146,7 +146,7 @@ app.get("/wait", function(req, res) {
 });
 
 app.get("/instructionsAffn", function(req, res) {
-    res.render("instructions", { redirectURL: "http://localhost:8080/displayAffn", content: "You will be shown affiliations of people. Observe and remember the faces and their affiliations. You will get time of 2 seconds per face." })
+    res.render("instructions", { redirectURL: "/displayAffn", content: "You will be shown affiliations of people. Observe and remember the faces and their affiliations. You will get time of 2 seconds per face." })
 });
 
 // adding image page from admin side 
