@@ -57,7 +57,10 @@ function scoreAnswers(correctAnswers, userAnswers) {
 function scoreBoth(userAnswersNames, userAnswersAffn) {
     let correct = 0;
     for (let i = 0; i < userAnswersNames.length; i++) {
-        if (userAnswersNames[i].toLowerCase() == names[i].toLowerCase() && userAnswersAffn[i].toLowerCase() == affiliations[i].toLowerCase()) correct++;
+        let name = names[i], affn = affiliations[i];
+        name = name.toLowerCase()
+        affn = affn.toLowerCase()
+        if (userAnswersNames[i].toLowerCase() == name && userAnswersAffn[i].toLowerCase() == affn) correct++;
     }
     return correct;
 } 
@@ -131,7 +134,7 @@ app.get("/affnTest", function(req, res) {
     res.render('oneInputTest.ejs', { images: allImages, functionality: "Occupation" });
 })
 
-//TODO: The follow two lines can be deleted?
+//TODO: The following two lines can be deleted?
 app.get("/allTest1", function(req, res) {
     res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test1", formSubmitURL: "/allTest/userAnswers/test1" });
 })
