@@ -17,7 +17,6 @@ app.use(require("express-session")({
     saveUninitialized: false
 }));
 app.use(express.static(path.join(__dirname, '/public')));
-init();
 
 let allImages = [], names = [], affiliations = [];
 async function fetchAllData() {
@@ -216,7 +215,3 @@ app.post('/add_img', upload.single('profile-file'), async function (req, res, ne
 var port = Number(process.env.PORT || 8080);
 app.listen(port);
 console.log("App running at port", port);
-
-function init() {
-    facenameData = db.fetchData();
-}
