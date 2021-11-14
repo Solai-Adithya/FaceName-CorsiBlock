@@ -308,12 +308,7 @@
             processInput('clear');
         }
     }
-
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-
+	
     var clickNext = function() {
         if (game.inUserStage()) {
             teardownUserTurnNotification();
@@ -513,7 +508,7 @@
 
     var setupSequenceResultText = function() {
         var svg = board;
-        var resultString = sequence.isCorrect() ? 'Correct!' : 'Wrong!';
+        var resultString = sequence.isCorrect() ? 'Correct! 🎉' : 'Wrong! ☹️';
         var resultText = svg.append('text')
             .attr('id', 'sequenceResultText')
             .style({
@@ -576,7 +571,7 @@
                 counter.remove();
                 callback();
             }
-        }, 1000);
+        }, 650);
     }
 
     var progressGame = function() {
