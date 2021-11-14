@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+		<style>
+			body {
+			  background-color: black;
+			}
+			</style>
+	
+<body>
+    <h1>
+        <span class="smallerFont">RESULTS: </span><br><br>
+    </h1>
+    <style>
+        h1 {
+  color: #00FFFF;
+  text-align: center;
+}
+
+.smallerFont {
+    font-size: 150%;
+}
+    </style>
+	  
+	<table class="table table-borderless">
+		<thead>
+		  <tr>
+			<th style= "color:cyan" scope="col">#</th>
+			<th style= "color:cyan" scope="col">Characteristics</th>
+			<th style= "color:cyan" scope="col">Correct answers</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+			<th style= "color:cyan" scope="row">1</th>
+			<td style= "color:cyan">Names Recalled 1st time</td>
+			<td style= "color:cyan"><%=results.recallNames_1%></td>
+            
+		  </tr>
+		  <tr>
+			<th style= "color:cyan" scope="row">2</th>
+            <td style= "color:cyan">Names Recalled 2nd time</td>
+			<td style= "color:cyan"><%= results.recallNames_2 %></td>     		
+		  </tr>
+
+          <tr>
+            <th style= "color:cyan" scope="row">3</th>
+            <td style= "color:cyan">Affiliation Recalled 1st time</td>
+            <td style= "color:cyan"><%= results.recallAffn_1 %></td>
+            </tr>
+
+            <tr>
+                <th style= "color:cyan" scope="row">4</th>
+                <td style= "color:cyan">Affiliation Recalled 2nd time</td>
+                <td style= "color:cyan"><%= results.recallAffn_2 %></td>
+            </tr>
+
+            <tr>
+                <th style= "color:cyan" scope="row">5</th>
+                <td style= "color:cyan">Affiliation Recalled 1st time</td>
+                <td style= "color:cyan"><%= results.cuedRecall_name%></td>
+            </tr>
+
+            <tr>
+                <th style= "color:cyan" scope="row">6</th>
+                <td style= "color:cyan">Affiliation Recalled 2nd time</td>
+                <td style= "color:cyan"><%= results.cuedRecall_affn%></td>
+            </tr>
+
+            <tr>
+                <th style= "color:cyan" scope="row">7</th>
+                <td style= "color:cyan">Affiliation Recalled 1st time</td>
+                <td style= "color:cyan"><%= results.cuedRecallAll_1%></td>
+            </tr>
+            
+            <tr>
+                <th style= "color:cyan" scope="row">8</th>
+                <td style= "color:cyan">Affiliation Recalled 2nd time</td>
+                <td style= "color:cyan"><%= results.cuedRecallAll_2%></td>
+            </tr>
+		</tbody>
+	  </table><br><br>
+      <div class="col text-center">
+        <button type="button" class="btn btn-info" href = "main_page.ejs" style= "text-align: center">Success</button>
+      </div>
+           
+	  
+	
+</body>
+</html>
+
+			
+            
+			
+            
+			
