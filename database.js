@@ -1,4 +1,9 @@
-require('dotenv').config()
+try {
+    require('dotenv').config()
+} catch (error) {
+    console.log(error);
+}
+
 const { createClient } = require('@supabase/supabase-js')
 
 const supabase = createClient(process.env.DB_URL, process.env.DB_KEY)
@@ -8,7 +13,7 @@ class API {
         const { data, error } = await supabase.from('Participants').insert(participant);
         console.log("New Participant DB Query Data: ", data, " Error: ", error)
         const participantID = data[0].participantID;
-        const scoreData = await this.addEmptyScoreEntry(participantID);
+        await this.addEmptyScoreEntry(participantID);
         return participantID;
     }
 
@@ -54,6 +59,13 @@ class API {
         const { data, error } = await supabase.from('Admin').select('username').match({ username: username_arg, hashedpwd: hashedpwd_arg });
         if (data.length > 0) return true;
         else return false;
+    }
+
+    async saveCorsiScore(participantID, correctCount, longestSpan) {
+        const { data, error } = await supabase.from('CorsiblockScores').insert({ participantID: participantID, correctCount: correctCount, longestSpan: longestSpan });
+        if (error)
+            throw (error)
+        return data;
     }
 }
 

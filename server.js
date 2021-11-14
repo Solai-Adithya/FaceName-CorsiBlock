@@ -5,6 +5,7 @@ const crypto = require('crypto')
 const db = new API()
 const app = express()
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser");
 const homeURL = "http://localhost:8080"
 const multer = require('multer');
 const storage = multer.diskStorage({
@@ -16,20 +17,24 @@ const storage = multer.diskStorage({
     }
 })
 const upload = multer({ storage: storage })
-var participantID;
+const oneDay = 1000 * 60 * 60 * 24;
 
 app.set("view engine", "ejs");
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(require("express-session")({
     secret: "Rusty is a dog",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: { maxAge: oneDay }
 }));
 app.use(express.static(path.join(__dirname, '/public')));
-app.use('/corsiblocktapping', require('./corsiblock'));
+// app.use('/corsiblocktapping', require('./corsiblock'));
 
-let allImages = [], names = [], affiliations = [];
+let allImages = [],
+    names = [],
+    affiliations = [];
 async function fetchAllData() {
     const imageData = await db.fetchFaceData();
     console.log("Final image data: ", imageData);
@@ -44,7 +49,7 @@ fetchAllData();
 function scoreAnswers(correctAnswers, userAnswers) {
     let correct = 0;
     for (let i = 0; i < correctAnswers.length; i++) {
-        if (correctAnswers[i] == userAnswers[i]) correct++;
+        if (correctAnswers[i].toLowerCase() == userAnswers[i].toLowerCase()) correct++;
     }
     return correct;
 }
@@ -52,24 +57,37 @@ function scoreAnswers(correctAnswers, userAnswers) {
 function scoreBoth(userAnswersNames, userAnswersAffn) {
     let correct = 0;
     for (let i = 0; i < userAnswersNames.length; i++) {
-        if (userAnswersNames[i] == names[i] && userAnswersAffn[i] == affiliations[i]) correct++;
+        if (userAnswersNames[i].toLowerCase() == names[i].toLowerCase() && userAnswersAffn[i].toLowerCase() == affiliations[i].toLowerCase()) correct++;
     }
     return correct;
 } 
+
+function scoreRecall(correctAnswers, userAnswers) {
+    let correct = 0;
+    correctAnswers = correctAnswers.map(name => name.toLowerCase());
+    userAnswers = userAnswers.map(name => name.toLowerCase());
+    for (let i = 0; i < correctAnswers.length; i++) {
+        if (userAnswers.includes(correctAnswers[i])) correct++;
+    }
+    return correct;
+}
 
 //GET REQUESTS
 app.get("/adminPanel.html", function(req, res) {
     res.redirect("/admin")
 })
 
+app.use('/corsiblocktapping', require('./corsi/server'));
+
 app.get('/face-name', async function(req, res) {
     //TODO: after development, prevent this page being directly accessed before filling form.
-    res.render('instructions', { redirectURL: homeURL+"/displayFaces", content: "You will be shown images of people. Observe and remember the faces. You will get time of 2 seconds per face." });
+    res.render('instructions', { redirectURL: homeURL + "/displayFaces", content: "You will be shown images of people. Observe and remember the faces. You will get time of 2 seconds per face." });
 });
 
 app.get('/', function(req, res) {
     res.render("input_page")
 });
+
 
 app.get("/namesTest1", function(req, res) {
     res.render("names", { formSubmitURL: "/names/test1" });
@@ -134,40 +152,53 @@ app.get('/add_image', function (req, res) {
 app.post("/", async function(req, res) {
     const formdata = req.body
     participantID = await db.newParticipant(formdata);
-    console.log("Participant ID is: ", participantID);
-    res.render("main_page", {participantID: participantID});
+    req.session.participantID = participantID;
+    // console.log("Participant ID is: ", participantID);
+    res.render("main_page")
 });
 app.post("/names/test1", function(req, res) {
-    const x = req.body
+    const postRequest = req.body
     console.log("\nNames recalled :-\n")
-    console.log(x.names)
-    const score = scoreAnswers(names, x.names)
-    db.updateScore(participantID, 'recallNames_1' ,score);
+    console.log(postRequest.names)
+    let userAnswers = postRequest.names.replace(/(\r\n|\n|\r)/gm, ",");
+    userAnswers = userAnswers.split(",");
+    console.log("User Answers: ", userAnswers)
+    const score = scoreRecall(names, userAnswers)
+    db.updateScore(req.session.participantID, 'recallNames_1' ,score);
     res.render("occupations", { formSubmitURL: "/occupationsTestPost1"});
 });
 app.post("/names/test2", function(req, res) {
-    const x = req.body
+    const postRequest = req.body
     console.log("\nNames recalled :-\n")
-    console.log(x.names)
-    const score = scoreAnswers(names, x.names)
-    db.updateScore(participantID, 'recallNames_2' ,score);
+    console.log(postRequest.names)
+    let userAnswers = postRequest.names.replace(/(\r\n|\n|\r)/gm, ",");
+    userAnswers = userAnswers.split(",");
+    console.log("User Answers: ", userAnswers)
+    const score = scoreRecall(names, userAnswers)
+    db.updateScore(req.session.participantID, 'recallNames_2' ,score);
     res.render("occupations", { formSubmitURL: "/occupationsTestPost2"});
 })
 
 app.post("/occupationsTestPost1", async function(req, res) {
-    const x = req.body
+    const postRequest = req.body
     console.log("\nOccupation recalled :-\n")
-    console.log(x.occupations)
-    const score = scoreAnswers(affiliations, x.occupations)
-    db.updateScore(participantID, 'recallAffn_1' ,score);
+    console.log(postRequest.occupations)
+    let userAnswers = postRequest.occupations.replace(/(\r\n|\n|\r)/gm, ",");
+    userAnswers = userAnswers.split(",");
+    console.log("User Answers: ", userAnswers)
+    const score = scoreRecall(affiliations, userAnswers)
+    db.updateScore(req.session.participantID, 'recallAffn_1' ,score);
     res.render('twoInputTest.ejs', { images: allImages });
 });
 app.post("/occupationsTestPost2", async function(req, res) {
-    const x = req.body
+    const postRequest = req.body
     console.log("\nOccupation recalled :-\n")
-    console.log(x.occupations)
-    const score = scoreAnswers(affiliations, x.occupations)
-    db.updateScore(participantID, 'recallAffn_2' ,score);
+    console.log(postRequest.occupations)
+    let userAnswers = postRequest.occupations.replace(/(\r\n|\n|\r)/gm, ",");
+    userAnswers = userAnswers.split(",");
+    console.log("User Answers: ", userAnswers)
+    const score = scoreRecall(affiliations, userAnswers)
+    db.updateScore(req.session.participantID, 'recallAffn_2' ,score);
     res.render('twoInputTest.ejs', { images: allImages });
 });
 
@@ -188,33 +219,33 @@ app.post("/login", async function(req, res) {
 app.post("/nameTest/userAnswers", function(req, res) {
     console.log("User's answers: ", req.body);
     const score = scoreAnswers(names, req.body.userAnswers);
-    db.updateScore(participantID, 'cuedRecall_name' ,score);
+    db.updateScore(req.session.participantID, 'cuedRecall_name' ,score);
     res.send("Success")
 })
 app.post("/affnTest/userAnswers", function(req, res) {
     console.log("User's answers: ", req.body);
     const score = scoreAnswers(affiliations, req.body.userAnswers);
-    db.updateScore(participantID, 'cuedRecall_affn' ,score);
+    db.updateScore(req.session.participantID, 'cuedRecall_affn' ,score);
     res.send("Success")
 })
 app.post("/allTest/userAnswers/test1", function(req, res) {
     console.log("User's answers for test1: ", req.body);
     const userAnswerNames = req.body.userAnswers[0]. userAnswerAffn = req.body.userAnswers[1];
     const score = scoreBoth(userAnswerNames, userAnswerAffn);
-    db.updateScore(participantID, 'cuedRecallAll_1' ,score);
+    db.updateScore(req.session.participantID, 'cuedRecallAll_1' ,score);
     res.send("Success")   
 })
 app.post("/allTest/userAnswers/test2", function(req, res) {
     console.log("User's answers for test2: ", req.body);
     const userAnswerNames = req.body.userAnswers[0]. userAnswerAffn = req.body.userAnswers[1];
     const score = scoreBoth(userAnswerNames, userAnswerAffn);
-    db.updateScore(participantID, 'cuedRecallAll_2' ,score);
+    db.updateScore(req.session.participantID, 'cuedRecallAll_2' ,score);
     res.send("Success")   
 })
 
 
 app.use('/public/facename/assets', express.static('public'));
-app.post('/add_img', upload.single('profile-file'), async function (req, res, next) {
+app.post('/add_img', upload.single('profile-file'), async function(req, res, next) {
     const obj = JSON.parse(JSON.stringify(req.body));
     console.log(obj);
     // const imgdata = obj;
