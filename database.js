@@ -1,4 +1,9 @@
-require('dotenv').config()
+try {
+    require('dotenv').config()
+} catch (error) {
+    console.log(error);
+}
+
 const { createClient } = require('@supabase/supabase-js')
 
 const supabase = createClient(process.env.DB_URL, process.env.DB_KEY)
