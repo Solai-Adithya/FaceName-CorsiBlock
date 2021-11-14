@@ -26,7 +26,7 @@
     </div>
 </body>
 <script>
-    let userAnswers = [], i = 0, postURL="/allTest/userAnswers", redirectURL="/wait";
+    let userAnswers = [], names = [], occupations = [], i = 0, postURL="/allTest/userAnswers", redirectURL="/wait";
     const AllImages = '<%= images %>'.split(',');
     console.log("AllImages: ", AllImages)
 
@@ -34,14 +34,15 @@
     document.getElementById("submit").addEventListener("click", async function(){
         const name = document.getElementById("name").value;
         const occupation = document.getElementById("affn").value;
-        let answer = [name, occupation];
-        userAnswers.push(answer);
+        names.push(name);
+        occupations.push(occupation);
         if(i < AllImages.length - 1) {
             i++;
             document.getElementById("name").value = "";
             document.getElementById("affn").value = "";
             document.getElementById("image").src = "facename/assets/" + AllImages[i];
         } else {
+            userAnswers = [names, occupations];
             console.log(userAnswers);
             await fetch(postURL, {
                 method: 'POST',

@@ -12,31 +12,36 @@ class API {
         return participantID;
     }
 
-    async addEmptyScoreEntry(participantID, facelistID = 1) {
+    async addEmptyScoreEntry(participantID) {
         //Add admin feature to change facelistID being served.
-        const { data, error } = await supabase.from('Score').insert({ participantID: participantID, facelistID: facelistID });
+        const activeFacelistID = await this.fetchActiveFacelist();
+        const { data, error } = await supabase.from('FacenameScore').insert({ participantID: participantID, facelistID: activeFacelistID });
         return data;
     }
 
     async updateScore(participantID, param, score) {
-        const { data, error } = await supabase.from('Score').where({ participantID: participantID }).update({
+        const { data, error } = await supabase.from('FacenameScore').update({
             [param]: score
-        });
+        }).match({ participantID: participantID });
         return data;
     }
 
-    async fetchImageSequence(facelistID) {
-        const { data, error } = await supabase.from('Facelist').select('image_sequence').match({ facelistID: facelistID }); 
-        console.log("Image Sequence: ", data[0].image_sequence)
+    async fetchActiveFacelist() {
+        const { data, error } = await supabase.from('Facelist').select('facelistID').match({ active: true });
+        return data[0].facelistID;
+    }
+
+    async fetchImageSequence() {
+        const { data, error } = await supabase.from('Facelist').select('image_sequence').match({ active: true }); 
+        console.log("Image Sequence: ", data)
         return data[0].image_sequence;
     }
 
-    async fetchFaceData(selectionString = "imageID, name, affiliation", facelistID = 1) {
-        const imageSequenceString = await this.fetchImageSequence(facelistID);
+    async fetchFaceData(selectionString = "imageID, name, affiliation") {
+        const imageSequenceString = await this.fetchImageSequence();
         const imageSequence = imageSequenceString.split(',');
         console.log("Image sequence retrieved is: ", imageSequence)
-        const { data, error } = await supabase.from('Facedata').select().in('imageID', imageSequence);
-        console.log("Facedata: ", data);
+        const { data, error } = await supabase.from('Facedata').select(selectionString).in('imageID', imageSequence);
         return data; 
     }
 
