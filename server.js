@@ -6,13 +6,12 @@ const db = new API()
 const app = express()
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser");
-const homeURL = "http://localhost:8080"
 const multer = require('multer');
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, './public/facename/assets')
     },
-    filename: async function (req, file, cb) {
+    filename: async function(req, file, cb) {
         cb(null, (req.body.gender.toLowerCase()) + (await db.fetch_lastimg((req.body.gender).toLowerCase())) + ".jpeg")
     }
 })
@@ -63,7 +62,7 @@ function scoreBoth(userAnswersNames, userAnswersAffn) {
         if (userAnswersNames[i].toLowerCase() == name && userAnswersAffn[i].toLowerCase() == affn) correct++;
     }
     return correct;
-} 
+}
 
 function scoreRecall(correctAnswers, userAnswers) {
     let correct = 0;
@@ -91,7 +90,7 @@ app.use('/corsiblocktapping', require('./corsi/server'));
 
 app.get('/face-name', async function(req, res) {
     //TODO: after development, prevent this page being directly accessed before filling form.
-    res.render('instructions', { redirectURL: homeURL + "/displayFaces", content: "You will be shown images of people. Observe and remember the faces. You will get time of 2 seconds per face." });
+    res.render('instructions', { redirectURL: "/displayFaces", content: "You will be shown images of people. Observe and remember the faces. You will get time of 2 seconds per face." });
 });
 
 app.get('/', function(req, res) {
@@ -107,27 +106,27 @@ app.get("/namesTest2", function(req, res) {
 });
 
 app.get("/displayFaces", function(req, res) {
-    res.render('displayFaces.ejs', { redirectURL: homeURL+"/instructionsNames", images: allImages, figcaptions: [] });
+    res.render('displayFaces.ejs', { redirectURL: "/instructionsNames", images: allImages, figcaptions: [] });
 })
 
 app.get("/displayNames", function(req, res) {
-    res.render('displayNames.ejs', { redirectURL: homeURL+"/nameTest", images: allImages, figcaptions: names });
+    res.render('displayNames.ejs', { redirectURL: "/nameTest", images: allImages, figcaptions: names });
 })
 
 app.get("/displayAffn", function(req, res) {
-    res.render('displayAffn.ejs', { redirectURL: homeURL+"/affnTest", images: allImages, figcaptions: affiliations });
+    res.render('displayAffn.ejs', { redirectURL: "/affnTest", images: allImages, figcaptions: affiliations });
 })
 
 app.get("/instructionsNames", function(req, res) {
-    res.render("instructions", { redirectURL: homeURL+"/displayNames", content: "You will be shown names of people. Observe and remember the faces and their names. You will get time of 2 seconds per face." })
+    res.render("instructions", { redirectURL: "/displayNames", content: "You will be shown names of people. Observe and remember the faces and their names. You will get time of 2 seconds per face." })
 })
 
 app.get("/instructionsAffn", function(req, res) {
-    res.render("instructions", { redirectURL: homeURL+"/displayAffn", content: "You will be shown affiliations of people. Observe and remember the faces and their affiliations. You will get time of 2 seconds per face." })
+    res.render("instructions", { redirectURL: "/displayAffn", content: "You will be shown affiliations of people. Observe and remember the faces and their affiliations. You will get time of 2 seconds per face." })
 })
 
 app.get("/nameTest", function(req, res) {
-    res.render('oneInputTest.ejs', { redirectURL: homeURL+"/displayAffn", images: allImages, functionality: "Name" });
+    res.render('oneInputTest.ejs', { redirectURL: "/displayAffn", images: allImages, functionality: "Name" });
 })
 
 app.get("/affnTest", function(req, res) {
@@ -139,14 +138,14 @@ app.get("/allTest1", function(req, res) {
     res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test1", formSubmitURL: "/allTest/userAnswers/test1" });
 })
 app.get("/allTest2", function(req, res) {
-    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/", formSubmitURL: "/allTest/userAnswers/test2" });
-}) //for now after test completion, redirect to home page
+        res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/", formSubmitURL: "/allTest/userAnswers/test2" });
+    }) //for now after test completion, redirect to home page
 
 app.get("/admin", function(req, res) {
     res.sendFile('adminLogin.html', { root: './public/' })
 })
 app.get("/wait", function(req, res) {
-    res.render('waitScreen.ejs', { redirectURL: homeURL+"/namesTest2"})
+    res.render('waitScreen.ejs', { redirectURL: "/namesTest2" })
 });
 
 app.get("/instructionsAffn", function(req, res) {
@@ -154,7 +153,7 @@ app.get("/instructionsAffn", function(req, res) {
 });
 
 // adding image page from admin side 
-app.get('/add_image', function (req, res) {
+app.get('/add_image', function(req, res) {
     res.render("add_image");
 });
 
@@ -170,14 +169,14 @@ app.post("/", async function(req, res) {
 app.post("/names/test1", function(req, res) {
     let userAnswers = convertStringToArray(req.body.names);
     const score = scoreRecall(names, userAnswers)
-    db.updateScore(req.session.participantID, 'recallNames_1' ,score);
-    res.render("occupations", { formSubmitURL: "/occupationsTestPost1"});
+    db.updateScore(req.session.participantID, 'recallNames_1', score);
+    res.render("occupations", { formSubmitURL: "/occupationsTestPost1" });
 });
 app.post("/names/test2", function(req, res) {
     let userAnswers = convertStringToArray(req.body.names);
     const score = scoreRecall(names, userAnswers)
-    db.updateScore(req.session.participantID, 'recallNames_2' ,score);
-    res.render("occupations", { formSubmitURL: "/occupationsTestPost2"});
+    db.updateScore(req.session.participantID, 'recallNames_2', score);
+    res.render("occupations", { formSubmitURL: "/occupationsTestPost2" });
 })
 
 app.post("/occupationsTestPost1", async function(req, res) {
@@ -210,28 +209,30 @@ app.post("/login", async function(req, res) {
 app.post("/nameTest/userAnswers", function(req, res) {
     console.log("User's answers: ", req.body);
     const score = scoreAnswers(names, req.body.userAnswers);
-    db.updateScore(req.session.participantID, 'cuedRecall_name' ,score);
+    db.updateScore(req.session.participantID, 'cuedRecall_name', score);
     res.send("Success")
 })
 app.post("/affnTest/userAnswers", function(req, res) {
     console.log("User's answers: ", req.body);
     const score = scoreAnswers(affiliations, req.body.userAnswers);
-    db.updateScore(req.session.participantID, 'cuedRecall_affn' ,score);
+    db.updateScore(req.session.participantID, 'cuedRecall_affn', score);
     res.send("Success")
 })
 app.post("/allTest/userAnswers/test1", function(req, res) {
     console.log("User's answers for test1: ", req.body);
-    const userAnswerNames = req.body.userAnswers[0], userAnswerAffn = req.body.userAnswers[1];
+    const userAnswerNames = req.body.userAnswers[0],
+        userAnswerAffn = req.body.userAnswers[1];
     const score = scoreBoth(userAnswerNames, userAnswerAffn);
-    db.updateScore(req.session.participantID, 'cuedRecallAll_1' ,score);
-    res.send("Success")   
+    db.updateScore(req.session.participantID, 'cuedRecallAll_1', score);
+    res.send("Success")
 })
 app.post("/allTest/userAnswers/test2", function(req, res) {
     console.log("User's answers for test2: ", req.body);
-    const userAnswerNames = req.body.userAnswers[0], userAnswerAffn = req.body.userAnswers[1];
+    const userAnswerNames = req.body.userAnswers[0],
+        userAnswerAffn = req.body.userAnswers[1];
     const score = scoreBoth(userAnswerNames, userAnswerAffn);
-    db.updateScore(req.session.participantID, 'cuedRecallAll_2' ,score);
-    res.send("Success")   
+    db.updateScore(req.session.participantID, 'cuedRecallAll_2', score);
+    res.send("Success")
 })
 
 
@@ -241,7 +242,7 @@ app.post('/add_img', upload.single('profile-file'), async function(req, res, nex
     console.log(obj);
     var num = await db.fetch_lastimg((obj.gender).toLowerCase());
     var img_num = (obj.gender.toLowerCase()) + num + ".jpeg";
-    var num2 = await db.update_lastimg((obj.gender).toLowerCase(), num+1);
+    var num2 = await db.update_lastimg((obj.gender).toLowerCase(), num + 1);
     imgID = await db.addNewFace(img_num, obj.name, obj.affiliation);
     // console.log("Image data is: ", imgID);
     res.render("completed");
