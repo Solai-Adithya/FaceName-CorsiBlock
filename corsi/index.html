@@ -26,14 +26,12 @@
     <div id='boardBackground'></div>
 </body>
 <script>
-    // The program begins with the call to setupUserIDScreen, as done in this function.
     window.onload = function() {
         var height = getViewportHeight();
 
         if (height > 0)
             document.getElementById("boardBackground").style.height = height + "px";
 
-        // setupUserIDScreen();
         InitiateInstScreen();
     }
 
@@ -81,7 +79,6 @@
 
     var startGame = function() {
         var resultScreen = setupResultScreen();
-        // not really 'results' in this context
         countdown(function() {
             resultScreen.remove();
             runGame();
@@ -163,24 +160,24 @@
 
         var styles = `
 	.button2 {
-		background-color: white; 
-  color: black; 
-  border: 3px solid #4CAF50;
-  width: 75px;
-  padding: 10px;
-  text-align: center;
-  display: inline-block;
-  font-size: 16px;
-  margin-left: 150px;
-  cursor: pointer;
-  border-radius: 12px;
-  transition-duration: 0.4s;
-}
+	background-color: white; 
+    color: black; 
+    border: 3px solid #4CAF50;
+    width: 75px;
+    padding: 10px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin-left: 150px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+    }
 
-.button2:hover {
-  background-color: #4CAF50; /* Green */
-  color: white;
-}`
+    .button2:hover {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    }`
         var styleSheet = document.createElement("style")
         styleSheet.type = "text/css"
         styleSheet.innerText = styles
@@ -396,6 +393,7 @@
 
     var teardownResultScreen = function() {
         d3.select('#resultScreen').remove();
+        
     }
 
     var setupGameResultText = function(scores) {
@@ -439,39 +437,39 @@
             location.href = "https://memorytasks-cs308.herokuapp.com/";
         };
 
-        var styles = `#mydiv7{ 
-    font-family: Georgia,Cambria,"Times New Roman",Times,serif;
-	color:rgb(0,255,255);
-    position:absolute;
-    top: 50%;
-    left: 50%;
-    width:45em;
-    height:22em;
-    margin-top: -14em; 
-	padding-top: 2em;
-    margin-left: -22em; 
-	border: 2px solid #ccc;
-	border-radius: 18px;
-    
-	}
-	.button3 {
-	background-color: white; 
-	color: black; 
-	border: 3px solid #4CAF50;
-	width: 75px;
-	padding: 10px;
-	text-align: center;
-	display: inline-block;
-	font-size: 16px;
-	margin: 25px 2px 0px 325px;
-	cursor: pointer;
-	border-radius: 12px;
-	transition-duration: 0.4s;
-	}
-	.button3:hover {
-	background-color: #4CAF50; /* Green */
-	color: white;
-	}`
+            var styles = `#mydiv7{ 
+        font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+        color:rgb(0,255,255);
+        position:absolute;
+        top: 50%;
+        left: 50%;
+        width:45em;
+        height:22em;
+        margin-top: -14em; 
+        padding-top: 2em;
+        margin-left: -22em; 
+        border: 2px solid #ccc;
+        border-radius: 18px;
+        
+        }
+        .button3 {
+        background-color: white; 
+        color: black; 
+        border: 3px solid #4CAF50;
+        width: 75px;
+        padding: 10px;
+        text-align: center;
+        display: inline-block;
+        font-size: 16px;
+        margin: 25px 2px 0px 325px;
+        cursor: pointer;
+        border-radius: 12px;
+        transition-duration: 0.4s;
+        }
+        .button3:hover {
+        background-color: #4CAF50; /* Green */
+        color: white;
+        }`
         var styleSheet = document.createElement("style")
         styleSheet.type = "text/css"
         styleSheet.innerText = styles
@@ -505,62 +503,85 @@
             setupGameResultText(score);
         }
     }
-
+    
     var setupSequenceResultText = function() {
-        var svg = board;
-        var resultString = sequence.isCorrect() ? 'Correct! 🎉' : 'Wrong! ☹️';
-        var resultText = svg.append('text')
-            .attr('id', 'sequenceResultText')
-            .style({
-                fill: 'white',
-                textAlign: "center",
-                stroke: 'none',
-                'font-family': ' Georgia,Cambria,"Times New Roman",Times,serif',
-                'font-style': 'bold',
-                'font-size': 24
-            })
-            .attr({
-                x: "30vw",
-                y: "50vh"
-            })
-            .text(resultString);
+            const mydiv8=document.createElement("div");
+            mydiv8.setAttribute("id","mydiv8");
+            const x2 = document.createElement('h1');
+            var resultString = sequence.isCorrect() ? 'Correct! 🎉' : 'Wrong! ☹️';
+            var tnode=document.createTextNode("\n\n"+resultString+"\n\n")
+            x2.appendChild(tnode);
+            x2.style.textAlign = "center";
+            x2.style.color="white";
+            mydiv8.appendChild(x2);
+            
+            var styles = `
+            #mydiv8{ 
+            font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+		    color:rgb(0,255,255);
+            position:absolute;
+    	    top: 50%;
+    	    left: 50%;
+    	    width:25em;
+    	    height:5em;
+    	    margin-top: -6em; 
+		    padding-top: 2em;
+    	    margin-left: -12em; 
+    	    }`
 
-        return resultText;
+        var styleSheet = document.createElement("style")
+        styleSheet.type = "text/css"
+        styleSheet.innerText = styles
+        document.head.appendChild(styleSheet);
+        const element=document.getElementById('boardBackground');
+        element.appendChild(mydiv8);
+        return mydiv8;
     }
 
-    var teardownSequenceResultText = function() {
-        d3.select('#sequenceResultText').remove();
+    var teardownSequenceResultText = function() {   
+        document.getElementById("mydiv8").remove();
     }
 
     var countdownNum;
     var setupCountdown = function() {
-        var svg = board;
-        var count = svg.append('text')
-            .attr('id', 'countdown')
-            .style({
-                fill: 'white',
-                stroke: 'none',
-                'font-family': ' Georgia,Cambria,"Times New Roman",Times,serif',
-                'font-style': 'bold',
-                'font-size': 48
-            })
-            .attr({
-                x: "30vw",
-                y: "50vh"
-            })
-            .text("" + countdownNum);
-        return count;
+            const mydiv9=document.createElement("div");
+            mydiv9.setAttribute("id","mydiv9");
+            const x2 = document.createElement('pre');
+            x2.setAttribute("id","x2");
+            x2.style.fontSize="52px";
+            x2.style.fontWeight="bold";
+            x2.style.fontFamily='Georgia,Cambria,"Times New Roman",Times,serif';
+            var tnode=document.createTextNode(""+countdownNum);
+            x2.appendChild(tnode);
+            x2.style.textAlign = "center";
+            x2.style.color="white";
+            mydiv9.appendChild(x2);
+          
+            var styles = `
+            #mydiv9{ 
+            position:absolute;
+    	    top: 50%;
+    	    left: 50%;
+    	    width:8em;
+    	    height:4em;
+    	    margin-top: -5em; 
+    	    margin-left: -5em;
+    	    }`
+            var styleSheet = document.createElement("style")
+        styleSheet.type = "text/css"
+        styleSheet.innerText = styles
+        document.head.appendChild(styleSheet);
+        const element=document.getElementById('boardBackground');
+        element.appendChild(mydiv9);
+        return mydiv9;
     }
 
     var countDown = function() {
-        d3.select('#countdown').text("" + --countdownNum);
+        document.getElementById("x2").innerHTML=""+--countdownNum;
     }
-
     var tZero = function() {
         return countdownNum === 0;
     }
-
-    // does not set up black background
     var countdown = function(callback) {
         countdownNum = 3;
         var counter = setupCountdown();
@@ -696,7 +717,6 @@
 
 
     var start = function(form) {
-        //teardownGameStartNotification();
         ClearInstScreen();
         cal_mm = 112;
         calibrateVals();
