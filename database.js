@@ -55,6 +55,18 @@ class API {
         if (data.length > 0) return true;
         else return false;
     }
+    
+    async fetch_lastimg(gender) {
+        const { data, error } = await supabase.from('last_face').select('number').match({ gender: gender });
+        //console.log("Number: ", data[0].number);
+        return data[0].number;
+    }
+
+    async update_lastimg(gender, img_num) {
+        const { data2, error2 } = await supabase.from('last_face').update({number: img_num}).match({ gender: gender });
+       // console.log("Image number updated ");
+        return 1;
+    }
 
     async saveCorsiScore(participantID, correctCount, longestSpan) {
         const { data, error } = await supabase.from('CorsiblockScores').insert({ participantID: participantID, correctCount: correctCount, longestSpan: longestSpan });
