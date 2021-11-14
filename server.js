@@ -8,12 +8,12 @@ const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser");
 const homeURL = "http://localhost:8080"
 const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+var storage = multer.diskStorage({
+    destination: function(req, file, cb) {
         cb(null, './public/facename/assets')
     },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname)
+    filename: async function (req, file, cb) {
+        cb(null, (req.body.gender.toLowerCase()) + (await db.fetch_lastimg((req.body.gender).toLowerCase())) + ".jpeg")
     }
 })
 const upload = multer({ storage: storage })
