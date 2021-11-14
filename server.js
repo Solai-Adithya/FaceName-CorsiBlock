@@ -138,7 +138,7 @@ app.get("/allTest1", function(req, res) {
     res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test1", formSubmitURL: "/allTest/userAnswers/test1" });
 })
 app.get("/allTest2", function(req, res) {
-        res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/", formSubmitURL: "/allTest/userAnswers/test2" });
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/", formSubmitURL: "/allTest/userAnswers/test2" });
     }) //for now after test completion, redirect to home page
 
 app.get("/admin", function(req, res) {
@@ -155,6 +155,11 @@ app.get("/instructionsAffn", function(req, res) {
 // adding image page from admin side 
 app.get('/add_image', function(req, res) {
     res.render("add_image");
+});
+
+app.get('/results', function(req, res) {
+    const facenameResults = db.fetchFaceNameResults(req.session.participantID);
+    res.render("resultScreen", {results: facenameResults});
 });
 
 

@@ -60,6 +60,11 @@ class API {
         if (data.length > 0) return true;
         else return false;
     }
+
+    async fetchFaceNameResults(participantID) {
+        const { data, error } = await supabase.from('FacenameScore').select().match({ participantID: participantID });
+        return data;
+    }
     
     async fetch_lastimg(gender) {
         const { data, error } = await supabase.from('last_face').select('number').match({ gender: gender });
