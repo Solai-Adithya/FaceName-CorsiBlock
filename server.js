@@ -136,8 +136,8 @@ app.get("/allTest1", function(req, res) {
     res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test1", formSubmitURL: "/allTest/userAnswers/test1" });
 })
 app.get("/allTest2", function(req, res) {
-    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test2", formSubmitURL: "/allTest/userAnswers/test2" });
-})
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/", formSubmitURL: "/allTest/userAnswers/test2" });
+}) //for now after test completion, redirect to home page
 
 app.get("/admin", function(req, res) {
     res.sendFile('adminLogin.html', { root: './public/' })
@@ -187,7 +187,7 @@ app.post("/occupationsTestPost2", async function(req, res) {
     let userAnswers = convertStringToArray(req.body.occupations)
     const score = scoreRecall(affiliations, userAnswers)
     db.updateScore(req.session.participantID, 'recallAffn_2', score)
-    res.send("Test done, thank you.")
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test2", formSubmitURL: "/allTest/userAnswers/test2" });
 });
 
 app.post("/login", async function(req, res) {
