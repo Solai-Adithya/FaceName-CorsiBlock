@@ -26,7 +26,7 @@ class API {
     }
 
     async fetchImageSequence(facelistID) {
-        const { data, error } = await supabase.from('Facelist').select('image_sequence').match({ facelistID: facelistID }); 
+        const { data, error } = await supabase.from('Facelist').select('image_sequence').match({ facelistID: facelistID });
         console.log("Image Sequence: ", data[0].image_sequence)
         return data[0].image_sequence;
     }
@@ -37,7 +37,7 @@ class API {
         console.log("Image sequence retrieved is: ", imageSequence)
         const { data, error } = await supabase.from('Facedata').select().in('imageID', imageSequence);
         console.log("Facedata: ", data);
-        return data; 
+        return data;
     }
 
     async addNewFace(imageID, name, affiliation) {
@@ -49,6 +49,13 @@ class API {
         const { data, error } = await supabase.from('Admin').select('username').match({ username: username_arg, hashedpwd: hashedpwd_arg });
         if (data.length > 0) return true;
         else return false;
+    }
+
+    async saveCorsiScore(participantID, correctCount, longestSpan) {
+        const { data, error } = await supabase.from('CorsiblockScores').insert({ participantID: participantID, correctCount: correctCount, longestSpan: longestSpan });
+        if (error)
+            throw (error)
+        return data;
     }
 }
 

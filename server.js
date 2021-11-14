@@ -5,16 +5,20 @@ const crypto = require('crypto')
 const db = new API()
 const app = express()
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser");
 const homeURL = "http://localhost:8080"
+const oneDay = 1000 * 60 * 60 * 24;
 var participantID;
 
 app.set("view engine", "ejs");
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(require("express-session")({
     secret: "Rusty is a dog",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: { maxAge: oneDay }
 }));
 app.use(express.static(path.join(__dirname, '/public')));
 
@@ -50,6 +54,7 @@ app.get('/', function(req, res) {
 app.post("/", async function(req, res) {
     const formdata = req.body
     participantID = await db.newParticipant(formdata);
+    req.session.participantID = participantID;
     console.log("Participant ID is: ", participantID);
     res.render("main_page")
 });
