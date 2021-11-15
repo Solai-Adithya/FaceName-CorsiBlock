@@ -6,9 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/twoInputTest.css">
     <title>Name Test</title>
+    <style>
+        .button3 {
+		background-color: white; 
+		color: black; 
+		border: 3px solid #4CAF50;
+		width: 90px;
+        height: 40px;
+		padding: 5px;
+		text-align: center;
+		display: inline-block;
+		font-size: 18px;
+        font-family: 'Georgia,Cambria,"Times New Roman",Times,serif';
+        margin-top: 20px;
+		margin-left: 20px;
+		cursor: pointer;
+		border-radius: 12px;
+		transition-duration: 0.4s;
+		}
+
+		.button3:hover {
+		background-color: #4CAF50; /* Green */
+		color: white;
+        }
+        .input1 {
+            width:200px;
+            height:30px;
+            text-align: center;
+        }
+    
+    </style>
 </head>
-<body>
-    <h3 class="Instruction">Enter the Names and occupation of the below person. Then click the 'Submit' button</h3>
+<body style="background-color: black;">
+    <h3 style="color: cyan;" class="Instruction">Enter the Names and occupation of the below person. Then click the 'Submit' button</h3>
     <div class="ImageContainer">
         <figure>
             <img class="Image" id="image">
@@ -16,13 +46,13 @@
     </div>
     <br>
     <div class="InputContainer">
-        <input type="text" id="name" name="name" autocomplete="off" placeholder="Enter Name">
+        <input class="input1" type="text" id="name" name="name" autocomplete="off" placeholder="Enter Name"><br><br><br>
     </div>
     <div class="InputContainer">
-        <input type="text" id="affn" name="affn" autocomplete="off" placeholder="Enter Occupation">
+        <input class="input1" type="text" id="affn" name="affn" autocomplete="off" placeholder="Enter Occupation">
     </div>
     <div class="ButtonContainer">
-        <input type="button" id="submit" value="Submit">
+        <input class="button3" type="button" id="submit" value="Submit">
     </div>
 </body>
 <script>
