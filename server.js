@@ -12,7 +12,7 @@ var storage = multer.diskStorage({
         cb(null, './public/facename/assets')
     },
     filename: async function(req, file, cb) {
-        cb(null, (req.body.gender.toLowerCase()) + (await db.fetch_lastimg((req.body.gender).toLowerCase())) + ".jpeg")
+        cb(null, (req.body.gender.toLowerCase()) + (await db.fetch_lastimg((req.body.gender).toLowerCase())) + ".jpg")
     }
 })
 const upload = multer({ storage: storage })
@@ -29,7 +29,6 @@ app.use(require("express-session")({
     cookie: { maxAge: oneDay }
 }));
 app.use(express.static(path.join(__dirname, '/public')));
-// app.use('/corsiblocktapping', require('./corsiblock'));
 
 let allImages = [],
     names = [],
@@ -159,9 +158,11 @@ app.get('/add_image', function(req, res) {
     res.render("add_image");
 });
 
-app.get('/results', function(req, res) {
-    const facenameResults = db.fetchFaceNameResults(req.session.participantID);
-    res.render("resultScreen", {results: facenameResults});
+app.get('/results', async function(req, res) {
+    const facenameResults = await db.fetchFaceNameResults(req.session.participantID);
+    // const facenameResults = await db.fetchFaceNameResults(169)
+    console.log("Facename scores fetched: ", facenameResults)
+    res.render("resultScreen", {results: facenameResults[0]});
 });
 
 
@@ -170,7 +171,6 @@ app.post("/", async function(req, res) {
     const formdata = req.body
     participantID = await db.newParticipant(formdata);
     req.session.participantID = participantID;
-    // console.log("Participant ID is: ", participantID);
     res.render("main_page")
 });
 app.post("/names/test1", function(req, res) {
