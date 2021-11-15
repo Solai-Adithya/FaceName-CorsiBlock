@@ -20,12 +20,16 @@ In the Corsi-block tapping task, the individual has to first observe a pattern o
 1. After running localhost:8080 in terminal you will get -> App running at port 8080
 2. Now, after visiting localhost:8080 in browser you will get,
 
+<ul>
+  <li> First Page</li>
 <p align="center">
 <img src="https://github.com/deepanshu368/FaceName-CorsiBlock/blob/main/public/screen1.png" />
 </p>
+<li> Second Page </li>
 <p align="center">
 <img src="https://github.com/deepanshu368/FaceName-CorsiBlock/blob/main/public/screen2.png" />
 </p>
+ </ul>
 
 3. Now just Click the game which you wants to play.
 
