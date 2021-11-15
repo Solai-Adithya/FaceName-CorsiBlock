@@ -190,7 +190,7 @@ app.post("/occupationsTestPost1", async function(req, res) {
     let userAnswers = convertStringToArray(req.body.occupations);
     const score = scoreRecall(affiliations, userAnswers)
     db.updateScore(req.session.participantID, 'recallAffn_1', score);
-    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test1", formSubmitURL: "/allTest/userAnswers/test1" });
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/wait", formSubmitURL: "/allTest/userAnswers/test1" });
 });
 app.post("/occupationsTestPost2", async function(req, res) {
     let userAnswers = convertStringToArray(req.body.occupations)
