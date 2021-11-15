@@ -6,8 +6,6 @@ import { JSDOM } from 'jsdom'
 import fs from 'fs'
 import path from 'path'
 
-
-
 const page = fs.readFileSync(path.resolve(__dirname, '../views/main_page.ejs'), 'utf8');
 
 let dom
