@@ -57,9 +57,11 @@ function scoreBoth(userAnswersNames, userAnswersAffn) {
     let correct = 0;
     for (let i = 0; i < userAnswersNames.length; i++) {
         let name = names[i], affn = affiliations[i];
-        name = name.toLowerCase()
-        affn = affn.toLowerCase()
-        if (userAnswersNames[i].toLowerCase() == name && userAnswersAffn[i].toLowerCase() == affn) correct++;
+        if(name && affn) {
+            name = name.toLowerCase()
+            affn = affn.toLowerCase()
+            if (userAnswersNames[i].toLowerCase() == name && userAnswersAffn[i].toLowerCase() == affn) correct++;
+        }
     }
     return correct;
 }
@@ -135,10 +137,10 @@ app.get("/affnTest", function(req, res) {
 
 //TODO: The following two lines can be deleted?
 app.get("/allTest1", function(req, res) {
-    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test1", formSubmitURL: "/allTest/userAnswers/test1" });
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/wait", formSubmitURL: "/allTest/userAnswers/test1" });
 })
 app.get("/allTest2", function(req, res) {
-    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/", formSubmitURL: "/allTest/userAnswers/test2" });
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/results", formSubmitURL: "/allTest/userAnswers/test2" });
     }) //for now after test completion, redirect to home page
 
 app.get("/admin", function(req, res) {
@@ -194,7 +196,7 @@ app.post("/occupationsTestPost2", async function(req, res) {
     let userAnswers = convertStringToArray(req.body.occupations)
     const score = scoreRecall(affiliations, userAnswers)
     db.updateScore(req.session.participantID, 'recallAffn_2', score)
-    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/allTest/userAnswers/test2", formSubmitURL: "/allTest/userAnswers/test2" });
+    res.render('twoInputTest.ejs', { images: allImages, redirectURL: "/results", formSubmitURL: "/allTest/userAnswers/test2" });
 });
 
 app.post("/login", async function(req, res) {
