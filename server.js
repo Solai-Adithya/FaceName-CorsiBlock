@@ -23,7 +23,7 @@ app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(require("express-session")({
-    secret: "Rusty is a dog",
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: oneDay }
