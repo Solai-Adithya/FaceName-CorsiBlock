@@ -21,10 +21,10 @@ In the Corsi-block tapping task, the individual has to first observe a pattern o
 2. Now, after visiting localhost:8080 in browser you will get,
 
 <p align="center">
-<img src="https://github.com/deepanshu368/FaceName-CorsiBlock/tree/main/public/screen1.png" />
+<img src="https://github.com/deepanshu368/FaceName-CorsiBlock/tree/main/public/screen1.png"/>
 </p>
 <p align="center">
-<img src="https://github.com/deepanshu368/FaceName-CorsiBlock/tree/main/public/screen2.png" />
+<img src="https://github.com/deepanshu368/FaceName-CorsiBlock/tree/main/public/screen2.png"/>
 </p>
 
 3. Now just Click the game which you wants to play.
