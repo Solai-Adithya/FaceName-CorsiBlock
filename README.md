@@ -5,15 +5,20 @@
 The Corsi-block tapping task is a standard psychological test for evaluating an individual's visuospatial memory abilities.  
 In the Corsi-block tapping task, the individual has to first observe a pattern of blinking blocks on a computer screen and then try to recall the exact order in which the different blocks blinked. In the face-name associative memory task, the individual is asked to learn the names and affiliations of some faces. The web-based application will be used for collecting data and for building cognitive models to predict human behavior in these tasks.
 
+## Live Demo
+
+https://memorytasks-cs308.herokuapp.com/
+
 ## How to Install
 
 1. Create a new folder in you local directory(say "test").
 2. Open terminal and go to above directory.(Use: cd .../test)
-3. Enter this in terminal: git clone https://github.com/deepanshu368/FaceName-CorsiBlock.git
+3. Open terminal and Enter : git clone https://github.com/deepanshu368/FaceName-CorsiBlock.git
 4. Now Enter: cd FaceName-CorsiBlock
-5. Now Enter: node server.js
-6. Go to Browser and type: localhost:8080
-7. Now the app is running at port 8080.
+5. Get the Database credentials from administrators and save it in the current directory.
+6. Now Enter: node server.js
+7. Go to Browser and type: localhost:8080
+8. Now the app is running at port 8080.
 
 ## Working 
 
@@ -36,5 +41,5 @@ In the Corsi-block tapping task, the individual has to first observe a pattern o
 
 ## Contact
 
-Contact ..., in case of any error.
+Contact any of Contributors in case of any error.
 
