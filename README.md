@@ -20,6 +20,9 @@ https://memorytasks-cs308.herokuapp.com/
 7. Go to Browser and type: localhost:8080
 8. Now the app is running at port 8080.
 
+## Run Unit tests
+Use the command `npm test` to run the unit tests.
+
 ## Working 
 
 1. After running localhost:8080 in terminal you will get -> App running at port 8080
