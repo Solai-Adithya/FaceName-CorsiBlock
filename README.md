@@ -1,4 +1,4 @@
-# FaceName-CorsiBlock : CS308 Project Group 11
+# FaceName-CorsiBlock : CS308 Project
 
 ## What is this Game About
 
@@ -8,13 +8,12 @@ In the Corsi-block tapping task, the individual has to first observe a pattern o
 ## Setting up dev environment
 
 1. Create a new folder in you local directory(say "test").
-2. Open terminal and go to above directory.(Use: cd .../test)
-3. Open terminal and Enter : git clone https://github.com/deepanshu368/FaceName-CorsiBlock.git
-4. Now Enter: cd FaceName-CorsiBlock
+2. Open terminal and go to above directory
+3. Clone the repository : git clone https://github.com/deepanshu368/FaceName-CorsiBlock.git
+4. `cd FaceName-CorsiBlock`
 5. Get the Database credentials from administrators and save it in the current directory.
-6. Now Enter: node server.js
-7. Go to Browser and type: localhost:8080
-8. Now the app is running at port 8080.
+6. Run the server: `node server.js`
+7. Visit `localhost:8080`
 
 ## Run Unit tests
 Use the command `npm test` to run the unit tests.
