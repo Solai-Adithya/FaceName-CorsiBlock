@@ -9,7 +9,7 @@ In the Corsi-block tapping task, the individual has to first observe a pattern o
 
 1. Create a new folder in you local directory(say "test").
 2. Open terminal and go to above directory
-3. Clone the repository : git clone https://github.com/deepanshu368/FaceName-CorsiBlock.git
+3. Clone the repository : `git clone https://github.com/deepanshu368/FaceName-CorsiBlock.git`
 4. `cd FaceName-CorsiBlock`
 5. Get the Database credentials from administrators and save it in the current directory.
 6. Run the server: `node server.js`
