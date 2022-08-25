@@ -2,8 +2,7 @@
 
 ## What is this Game About
 
-The Corsi-block tapping task is a standard psychological test for evaluating an individual's visuospatial memory abilities.  
-In the Corsi-block tapping task, the individual has to first observe a pattern of blinking blocks on a computer screen and then try to recall the exact order in which the different blocks blinked. In the face-name associative memory task, the individual is asked to learn the names and affiliations of some faces. The web-based application will be used for collecting data and for building cognitive models to predict human behavior in these tasks.
+The Corsi-block tapping task is a standard psychological test for evaluating an individual's visuospatial memory abilities.In the Corsi-block tapping task, the individual has to first observe a pattern of blinking blocks on a computer screen and then try to recall the exact order in which the different blocks blinked. In the face-name associative memory task, the individual is asked to learn the names and affiliations of some faces. The web-based application will be used for collecting data and for building cognitive models to predict human behavior in these tasks.
 
 ## Setting up dev environment
 
